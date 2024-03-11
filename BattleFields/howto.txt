@@ -7,3 +7,13 @@
 RunAsDate.exe /immediate /movetime %day%\%month%\%year% %time% "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" Battlefield_Main_New -game -server ...ваши_аргументы_запуска
 также незабудьте указать ид вашего сервера (7020) в строке 
 set "serverid=7020"
+
+### Installation
+Download RunAsDate.exe and BattleField_Looper.bat
+Place in the directory C:\yourcluster\MatrixServerTool
+edit BattleField_Looper.bat by substituting launch parameters
+from your StartBattleServer_YYYY.bat copy from the words (Battlefield_Main_New -game -server ...your_launch_arguments)
+As a result, the launch line will appear
+RunAsDate.exe /immediate /movetime %day%\%month%\%year% %time% "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" Battlefield_Main_New -game -server ...your_run_arguments
+also don’t forget to indicate your server ID (7020) in the line
+set "serverid=7020"

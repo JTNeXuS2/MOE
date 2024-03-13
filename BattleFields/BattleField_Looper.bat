@@ -41,6 +41,7 @@ if %errorlevel% equ 0 (
 )
 
 :run
+echo Run date %day%\%month%\%year% %time%
 RunAsDate.exe /immediate /movetime %day%\%month%\%year% %time% "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" %runparam%
 
 echo Wait Loading Server

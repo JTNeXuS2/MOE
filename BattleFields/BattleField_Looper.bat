@@ -6,23 +6,30 @@ setlocal enabledelayedexpansion
 :start
 :: ID sesion name and read log 
 set "serverid=7020"
-:: looking for the official launch time of the event (https://discord.com/channels/786062570095116293/1171345133141237780/1216977618021388328)
-set time=04:00:00
-
-:: read batch StartBattleServer_YYYY.bat
-set "readbatch=StartBattleServer_%serverid%.bat"
-
 TITLE BATTLEFIELD Looper SessionName-%serverid% ServerId-%serverid%
 
+:: looking for the official launch time of the event (https://discord.com/channels/911228503154917387/911228503721119828/1216847557804687451)
+set time=04:00:00
+set startday=MON
+:: Monday [MON] – понедельник
+:: Tuesday [TUE] – вторник
+:: Wednesday [WED] – среда
+:: Thursday [THU] – четверг
+:: Friday [FRI] – пятница
+:: Saturday [SAT] – суббота
+:: Sunday [SUN] – воскресенье
+
 :: looking for the nearest official launch day of the event (https://discord.com/channels/786062570095116293/1171345133141237780/1216977618021388328)
-:: check the day is equal to Saturday and Monday if not equal, look for the closest one
-for /f "tokens=1-3 delims=/-. " %%a in ('powershell -Command "$currentDate = Get-Date; if ($currentDate.DayOfWeek -ne 'Saturday' -and $currentDate.DayOfWeek -ne 'Monday') { $daysUntilSaturday = (6 - $currentDate.DayOfWeek.value__); $daysUntilMonday = (1 - $currentDate.DayOfWeek.value__); if ($daysUntilMonday -lt $daysUntilSaturday) { $newDate = $currentDate.AddDays($daysUntilMonday) } else { $newDate = $currentDate.AddDays($daysUntilSaturday) }; $newDate.ToString('dd/MM/yyyy HH:mm:ss') } else { $currentDate.ToString('dd/MM/yyyy HH:mm:ss') }"') do (
+:: check the day is equal to '%startday% if not equal, look for the closest one
+for /f "tokens=1-3 delims=/-. " %%a in ('powershell -Command "$currentDate = Get-Date; if ($currentDate.DayOfWeek -ne '%startday%') { $daysUntilSaturday = (6 - $currentDate.DayOfWeek.value__); $daysUntilMonday = (1 - $currentDate.DayOfWeek.value__); if ($daysUntilMonday -lt $daysUntilSaturday) { $newDate = $currentDate.AddDays($daysUntilMonday) } else { $newDate = $currentDate.AddDays($daysUntilSaturday) }; $newDate.ToString('dd/MM/yyyy HH:mm:ss') } else { $currentDate.ToString('dd/MM/yyyy HH:mm:ss') }"') do (
     set "day=%%a"
     set "month=%%b"
     set "year=%%c"
 )
 echo.
 
+:: read batch StartBattleServer_YYYY.bat
+set "readbatch=StartBattleServer_%serverid%.bat"
 set "runparam="
 for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
     set "line=%%a"

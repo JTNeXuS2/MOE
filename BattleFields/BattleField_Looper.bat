@@ -1,17 +1,34 @@
 @echo off
+chcp 65001
 cd %~dp0
 mode con:cols=70 lines=8
+setlocal enabledelayedexpansion
 
 :start
 :: ID sesion name and read log 
-set "serverid=7020"
+set "serverid=7030"
+:: looking for the official launch time of the event (https://discord.com/channels/786062570095116293/1171345133141237780/1216977618021388328)
 set time=04:00:00
 
-TITLE BATTLEFIELD Looper SessionName-%serverid% ServerId-%serverid%
-for /f "tokens=1-3 delims=/-. " %%a in ('date /t') do (
+:: read batch StartBattleServer_YYYY.bat
+set "readbatch=StartBattleServer_%serverid%.bat"
+
+:: looking for the nearest official launch day of the event (https://discord.com/channels/786062570095116293/1171345133141237780/1216977618021388328)
+:: check the day is equal to Saturday and Monday if not equal, look for the closest one
+for /f "tokens=1-3 delims=/-. " %%a in ('powershell -Command "$currentDate = Get-Date; if ($currentDate.DayOfWeek -ne 'Saturday' -and $currentDate.DayOfWeek -ne 'Monday') { $daysUntilSaturday = (6 - $currentDate.DayOfWeek.value__); $daysUntilMonday = (1 - $currentDate.DayOfWeek.value__); if ($daysUntilMonday -lt $daysUntilSaturday) { $newDate = $currentDate.AddDays($daysUntilMonday) } else { $newDate = $currentDate.AddDays($daysUntilSaturday) }; $newDate.ToString('dd/MM/yyyy HH:mm:ss') } else { $currentDate.ToString('dd/MM/yyyy HH:mm:ss') }"') do (
     set "day=%%a"
     set "month=%%b"
     set "year=%%c"
+)
+echo.
+
+set "runparam="
+for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
+    set "line=%%a"
+    if defined line (
+        set "line=!line:*start "MOEServer.exe - PrivateServer" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" =!"
+        set "runparam=!runparam!!line!"
+    )
 )
 
 echo find Window: SessionName-%serverid% ServerId-%serverid% PID-
@@ -23,8 +40,7 @@ if %errorlevel% equ 0 (
 )
 
 :run
-
-RunAsDate.exe /immediate /movetime %day%\%month%\%year% %time% "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" Battlefield_Main_New -game -server -ClusterId=8888 -log -StartBattleService -StartPubData -BigPrivateServer -DistrictId=1 -EnableParallelTickFunction -DisablePhysXSimulation -LOCALLOGTIMES -corelimit=5 -core -HangDuration=300 -NotCheckServerSteamAuth  -ActivityServer=true -MultiHome=65.109.113.61 -OutAddress=65.109.113.61 -Port=GAMEPORT -QueryPort=STEAMPORT -ShutDownServicePort=RCONPORT -ShutDownServiceIP=65.109.113.61 -ShutDownServiceKey=RCONPASS -MaxPlayers=100 -SessionName=7020 -ServerId=7020 log=BattleServer_7020.log -PubDataAddr=65.109.113.61 -PubDataPort=PUBPORT -DBAddr=65.109.113.61 -DBPort=DBPORT -BattleAddr=65.109.113.61 -BattlePort=BATLEPORT -ChatServerAddr=65.109.113.61 -ChatServerPort=CHATPORT -ChatClientAddress=65.109.113.61 -ChatClientPort=CLICHATPORT -OptEnable=1 -OptAddr=65.109.113.61 -OptPort=OPTPORT -Description="Discord" -MaxPlayers=100 -NoticeSelfEnable=true -NoticeSelfEnterServer="Discord" -MapDifficultyRate=1 -UseACE -EnableVACBan=1 -ServerAdminAccounts=111111;222222 -NoticeAllEnable=true -NoticeEnterServer=" Discord" -SaveGameIntervalMinute=7 -NormalReduceDurableMultiplier=0.8 -bEnableServerLevel=false -GeneralQualityMultiPVPBlue=0 -GeneralQualityMultiPVPPurse=0.2 -HorseMaxQualityCorrectionPVE=0.9 -TameAnimalLifeMultiplier=2 -MoveSeatLoadMultiplier=2 -NUM_AllGeneralMax=10 -NUM_WarGeneralMax=2 -NUM_AllHorseMax=20 -NUM_WarHorseMax=10 -TameAnimalMatingSpeedMultiplier=2 -TameAnimalMatingCDMultiplier=0.5 -BabyAnimalGrowthRateMultiplier=0.5 -ItemCraftRepairTimeMulti=0.3  -BattleServerReduceInventoryDurablePercent=0 -OccupyDecayHPMultiplier=3 
+RunAsDate.exe /immediate /movetime %day%\%month%\%year% %time% "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" %runparam%
 
 echo Wait Loading Server
 timeout /t 30
@@ -45,3 +61,4 @@ if %errorlevel% equ 1 (
     cls
     goto start
 )
+endlocal

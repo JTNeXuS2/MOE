@@ -1,17 +1,18 @@
 @echo off
-chcp 65001
 cd %~dp0
 mode con:cols=70 lines=8
 setlocal enabledelayedexpansion
 
 :start
 :: ID sesion name and read log 
-set "serverid=7030"
+set "serverid=7020"
 :: looking for the official launch time of the event (https://discord.com/channels/786062570095116293/1171345133141237780/1216977618021388328)
 set time=04:00:00
 
 :: read batch StartBattleServer_YYYY.bat
 set "readbatch=StartBattleServer_%serverid%.bat"
+
+TITLE BATTLEFIELD Looper SessionName-%serverid% ServerId-%serverid%
 
 :: looking for the nearest official launch day of the event (https://discord.com/channels/786062570095116293/1171345133141237780/1216977618021388328)
 :: check the day is equal to Saturday and Monday if not equal, look for the closest one

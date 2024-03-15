@@ -16,7 +16,7 @@ start bot via !Start.cmd if yoar use non-compiled app or run MOE.ServerStatus.ex
 invite bot via link in window bot
 
 use /sendhere in discord channel to end setup
-
+for /help
 
 
 

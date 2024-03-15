@@ -17,3 +17,11 @@ start bot via !Start.cmd if yoar use non-compiled app or run MOE.ServerStatus.ex
 invite bot via link in window bot
 
 use /sendhere in discord channel to end setup
+
+
+
+
+
+### [Donate for me](https://yoomoney.ru/to/4100116619431314)
+#
+https://fkwallet.io  ID: F7202415841873335

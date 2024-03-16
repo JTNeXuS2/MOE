@@ -20,7 +20,7 @@ def read_cfg():
         with open('config.ini', 'r', encoding='utf-8') as file:
             config.read_file(file)
     except FileNotFoundError:
-        print("Config.ini not found.")
+        print("Ошибка: Файл конфигурации не найден.")
         return None
     return config
 
@@ -122,9 +122,9 @@ async def update():
 
             pvptype = str(custom_info['pvp_type'])
             match pvptype:
-                case "1":
-                    pvptype = "**PVP**"
                 case "0":
+                    pvptype = "**PVP**"
+                case "1":
                     pvptype = "**PVE**"
                 case _:
                     pvptype = "N/A"

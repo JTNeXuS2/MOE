@@ -13,3 +13,9 @@ edit BattleField_Looper.bat by substituting launch parameters, set date (https:/
 
 also don’t forget to indicate your server ID (7020) in the line
 set "serverid=7020"
+
+for Linux analog
+I haven’t checked
+https://github.com/wolfcw/libfaketime
+$ sudo apt install faketime
+$ faketime '2024-03-16 04:00:00' date

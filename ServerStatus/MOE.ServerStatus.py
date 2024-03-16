@@ -1,4 +1,4 @@
-#requests for install
+#requests
 # py -3 -m pip install -U disnake
 # pip install requests
 import disnake
@@ -118,10 +118,18 @@ async def update():
                 case _:
                     local_map = "UNKNOWN"
 
+            pvptype = str(custom_info['pvp_type'])
+            match pvptype:
+                case "1":
+                    pvptype = "**PVP**"
+                case "0":
+                    pvptype = "**PVE**"
+                case _:
+                    pvptype = "N/A"
             color = disnake.Color.random()
             embed = disnake.Embed(
                 title=server_data.get('name', 'N/A'),
-                description=f"Map: {local_map}\n:green_circle: Online: {server_data.get('online', '0')}/{custom_info.get('maxplayer', '0')}\nDescription: {custom_info.get('desc', 'N/A')}",
+                description=f"Map: {local_map}\n:green_circle: Online: {server_data.get('online', '0')}/{custom_info.get('maxplayer', '0')}\nType: {pvptype}\nDescription: {custom_info.get('desc', 'N/A')}",
                 color=disnake.Color.green()
             )
             embeds.append(embed)

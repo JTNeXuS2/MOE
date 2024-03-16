@@ -173,7 +173,7 @@ async def help(ctx):
 async def moestatus(ctx):
     try:
         addition_embed = await update()
-        await ctx.response.send_message(embed=addition_embed, ephemeral=False)
+        await ctx.response.send_message(embed=addition_embed, ephemeral=True)
     except Exception as e:
         await ctx.response.send_message(f'❌ Please try again later.', ephemeral=True)
         print(f'Error occurred during file write: {e}')

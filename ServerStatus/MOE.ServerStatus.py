@@ -120,9 +120,9 @@ async def update():
 
             pvptype = str(custom_info['pvp_type'])
             match pvptype:
-                case "1":
-                    pvptype = "**PVP**"
                 case "0":
+                    pvptype = "**PVP**"
+                case "1":
                     pvptype = "**PVE**"
                 case _:
                     pvptype = "N/A"

@@ -20,7 +20,7 @@ def read_cfg():
         with open('config.ini', 'r', encoding='utf-8') as file:
             config.read_file(file)
     except FileNotFoundError:
-        print("Ошибка: Файл конфигурации не найден.")
+        print("Config.ini not found.")
         return None
     return config
 
@@ -44,7 +44,6 @@ def update_settings():
             channel_id = config['botconfig']['channel_id']
             message_id = config['botconfig']['message_id']
             additions = config['botconfig']['additions']
-            # debug = config['botconfig']['debug']
             lookservers = {key: value for key, value in config['server'].items()}
 
         except KeyError as e:
@@ -105,24 +104,27 @@ async def update():
         else:
             custom_info = json.loads(server_data['custom_info'])
             #Localize
+            config = read_cfg()
             local_map = custom_info['map_name']
             match local_map:
                 case "LargeTerrain_Central2_Main":
-                    local_map = "Восточные острова"
+                    local_map = config['locale']['LargeTerrain_Central2_Main']
                 case "LargeTerrain_Central_Main":
-                    local_map = "Центральная равнина"
+                    local_map = config['locale']['LargeTerrain_Central_Main']
                 case "Map_Lobby":
-                    local_map = "Лобби"
+                    local_map = config['locale']['Map_Lobby']
                 case "Battlefield_Main_New":
-                    local_map = "Поле битвы"
+                    local_map = config['locale']['Battlefield_Main_New']
+                case "CountyTown_Main":
+                    local_map = config['locale']['CountyTown_Main']
                 case _:
-                    local_map = "UNKNOWN"
+                    local_map = "N/A"
 
             pvptype = str(custom_info['pvp_type'])
             match pvptype:
-                case "0":
-                    pvptype = "**PVP**"
                 case "1":
+                    pvptype = "**PVP**"
+                case "0":
                     pvptype = "**PVE**"
                 case _:
                     pvptype = "N/A"
@@ -134,7 +136,6 @@ async def update():
             )
             embeds.append(embed)
 
-    #print(f'embeds')
     masstitle = ""
     masstext = ""
     for embed in embeds:
@@ -152,8 +153,6 @@ async def on_ready():
     print(f'Logged in as {bot.user}')
     print('Invite bot link to discord (open in browser):\nhttps://discord.com/api/oauth2/authorize?client_id='+ str(bot.user.id) +'&permissions=8&scope=bot\n')
     while True:
-        #channel_id = None
-        #message_id = None
         update_settings()
         try:
             channel = await bot.fetch_channel(channel_id)

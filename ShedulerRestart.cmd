@@ -7,7 +7,7 @@ schtasks /query /tn "MOE.Restart"
 echo %errorlevel%
 if %errorlevel% == 1 (
     echo Task not found. Adding task to the scheduler...
-    schtasks /create /F /tn "MOE.Restart" /tr "%~dp0ShedulerRestart.cmd" /sc daily /st 12:00
+    schtasks /create /F /tn "MOE.Restart" /tr "%~dp0ShedulerRestart.cmd" /sc daily /st 11:50
 	echo exit
 	timeout /t 5
 	exit

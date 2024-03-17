@@ -117,8 +117,18 @@ async def update():
                     local_map = config['locale']['Battlefield_Main_New']
                 case "CountyTown_Main":
                     local_map = config['locale']['CountyTown_Main']
+                case "Battlefield_Gorge_Main":
+                    local_map = config['locale']['Battlefield_Gorge_Main']
+                case "NewYear_01_Main":
+                    local_map = config['locale']['NewYear_01_Main']
+                case "CountyTown_Main_Special":
+                    local_map = config['locale']['CountyTown_Main_Special']
+                case "PrefectureWar_Main_Special ":
+                    local_map = config['locale']['PrefectureWar_Main_Special ']
+                case "RaceHorse01_Main":
+                    local_map = config['locale']['RaceHorse01_Main']
                 case _:
-                    local_map = "N/A"
+                    local_map = f"{local_map}"
 
             pvptype = str(custom_info['pvp_type'])
             match pvptype:
@@ -131,7 +141,7 @@ async def update():
             color = disnake.Color.random()
             embed = disnake.Embed(
                 title=server_data.get('name', 'N/A'),
-                description=f"Map: {local_map}\n:green_circle: Online: {server_data.get('online', '0')}/{custom_info.get('maxplayer', '0')}\nType: {pvptype}\nDescription: {custom_info.get('desc', 'N/A')}",
+                description=f":green_circle: Online: {server_data.get('online', '0')}/{custom_info.get('maxplayer', '0')}\n Map: {local_map}\n Type: {pvptype}\nDescription: {custom_info.get('desc', 'N/A')}",
                 color=disnake.Color.green()
             )
             embeds.append(embed)

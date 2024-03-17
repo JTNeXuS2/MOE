@@ -10,6 +10,7 @@ if %errorlevel% == 1 (
     schtasks /create /F /tn "MOE.Restart" /tr "%~dp0ShedulerRestart.cmd" /sc daily /st 12:00
 	echo exit
 	timeout /t 5
+	exit
 )
 
 set "clusterpath=C:\moe_cluster"

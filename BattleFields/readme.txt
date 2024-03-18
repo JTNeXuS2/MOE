@@ -6,6 +6,15 @@
 также незабудьте указать ид вашего сервера (7020) в строке 
 set "serverid=7020"
 
+время и даты в которые можно запустить определенные события, (UTC+3 Московское)
+NewYear_01_Main
+RaceHorse01_Main
+CountyTown_Main
+CountyTown_Main_Special - Siege - 23\03\2024 16:00:00
+Battlefield_Main_New - Plaint - 18\03\2024 17:00:00
+Battlefield_Gorge_Main - Gobi - 23\03\2024 04:00:00
+PrefectureWar_Main_Special - Asia - 17\03\2024 16:00:00
+
 ### Installation
 Download RunAsDate.exe and BattleField_Looper.bat
 Place in the directory C:\yourcluster\MatrixServerTool
@@ -13,6 +22,15 @@ edit BattleField_Looper.bat by substituting launch parameters, set date (https:/
 
 also don’t forget to indicate your server ID (7020) in the line
 set "serverid=7020"
+
+time and dates at which certain events can be launched (UTC+3 Moscow)
+NewYear_01_Main
+RaceHorse01_Main
+CountyTown_Main
+CountyTown_Main_Special - Siege - 23\03\2024 16:00:00
+Battlefield_Main_New - Plaint - 18\03\2024 17:00:00
+Battlefield_Gorge_Main - Gobi - 23\03\2024 04:00:00
+PrefectureWar_Main_Special - Asia - 17\03\2024 16:00:00
 
 for Linux analog
 I haven’t checked

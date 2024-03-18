@@ -7,9 +7,9 @@
 set "serverid=7020"
 
 время и даты в которые можно запустить определенные события, (UTC+3 Московское)
-NewYear_01_Main
-RaceHorse01_Main
-CountyTown_Main
+NewYear_01_Main - NY Event - nothing
+RaceHorse01_Main - nothing
+CountyTown_Main - nothing
 CountyTown_Main_Special - Siege - 23\03\2024 16:00:00
 Battlefield_Main_New - Plaint - 18\03\2024 17:00:00
 Battlefield_Gorge_Main - Gobi - 23\03\2024 04:00:00

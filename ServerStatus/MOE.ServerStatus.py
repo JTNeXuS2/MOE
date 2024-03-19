@@ -20,7 +20,7 @@ def read_cfg():
         with open('config.ini', 'r', encoding='utf-8') as file:
             config.read_file(file)
     except FileNotFoundError:
-        print("Ошибка: Файл конфигурации не найден.")
+        print("Error: Config.ini not found.")
         return None
     return config
 
@@ -34,7 +34,7 @@ async def write_cfg(section, key, value):
         config.write(configfile)
 
 def update_settings():
-    global token, channel_id, message_id, additions, lookservers
+    global token, channel_id, message_id, additions, lookservers , timer
 
     config = read_cfg()
 
@@ -44,10 +44,11 @@ def update_settings():
             channel_id = config['botconfig']['channel_id']
             message_id = config['botconfig']['message_id']
             additions = config['botconfig']['additions']
+            timer = config['botconfig']['timer']
             lookservers = {key: value for key, value in config['server'].items()}
 
         except KeyError as e:
-            print(f"Ошибка: Не удалось найти соответствующие строки в конфигурационном файле: {e}")
+            print(f"Error: wrong lines in config file {e}")
 
 token = None
 channel_id = None
@@ -103,32 +104,32 @@ async def update():
             embeds.append(offline_embed)
         else:
             custom_info = json.loads(server_data['custom_info'])
-            #Localize
             config = read_cfg()
             local_map = custom_info['map_name']
-            match local_map:
-                case "LargeTerrain_Central2_Main":
-                    local_map = config['locale']['LargeTerrain_Central2_Main']
-                case "LargeTerrain_Central_Main":
-                    local_map = config['locale']['LargeTerrain_Central_Main']
-                case "Map_Lobby":
-                    local_map = config['locale']['Map_Lobby']
-                case "Battlefield_Main_New":
-                    local_map = config['locale']['Battlefield_Main_New']
-                case "CountyTown_Main":
-                    local_map = config['locale']['CountyTown_Main']
-                case "Battlefield_Gorge_Main":
-                    local_map = config['locale']['Battlefield_Gorge_Main']
-                case "NewYear_01_Main":
-                    local_map = config['locale']['NewYear_01_Main']
-                case "CountyTown_Main_Special":
-                    local_map = config['locale']['CountyTown_Main_Special']
-                case "PrefectureWar_Main_Special ":
-                    local_map = config['locale']['PrefectureWar_Main_Special ']
-                case "RaceHorse01_Main":
-                    local_map = config['locale']['RaceHorse01_Main']
-                case _:
-                    local_map = f"{local_map}"
+            try:
+                match local_map:
+                    case "LargeTerrain_Central2_Main":
+                        local_map = config['locale']['LargeTerrain_Central2_Main']
+                    case "LargeTerrain_Central_Main":
+                        local_map = config['locale']['LargeTerrain_Central_Main']
+                    case "Map_Lobby":
+                        local_map = config['locale']['Map_Lobby2']
+                    case "Battlefield_Main_New":
+                        local_map = config['locale']['Battlefield_Main_New']
+                    case "CountyTown_Main":
+                        local_map = config['locale']['CountyTown_Main']
+                    case "Battlefield_Gorge_Main":
+                        local_map = config['locale']['Battlefield_Gorge_Main']
+                    case "NewYear_01_Main":
+                        local_map = config['locale']['NewYear_01_Main']
+                    case "CountyTown_Main_Special":
+                        local_map = config['locale']['CountyTown_Main_Special']
+                    case "PrefectureWar_Main_Special ":
+                        local_map = config['locale']['PrefectureWar_Main_Special ']
+                    case "RaceHorse01_Main":
+                        local_map = config['locale']['RaceHorse01_Main']
+            except Exception as e:
+                local_map = f"{local_map}"
 
             pvptype = str(custom_info['pvp_type'])
             match pvptype:
@@ -171,9 +172,9 @@ async def on_ready():
             if message:
                 await message.edit(content=f'Last update: {datetime.datetime.now().strftime("%H:%M")}', embed=addition_embed)
         except Exception as e:
-            print(f'Failed to fetch channel or message. Maybe try /sendhere\n {e}')
+            print(f'Failed to fetch channel, message or server data. Maybe try /sendhere\n {e}')
 
-        await asyncio.sleep(30)
+        await asyncio.sleep(int(timer))
 
 @bot.slash_command(description="Show commands list")
 async def help(ctx):

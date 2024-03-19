@@ -113,7 +113,7 @@ async def update():
                     case "LargeTerrain_Central_Main":
                         local_map = config['locale']['LargeTerrain_Central_Main']
                     case "Map_Lobby":
-                        local_map = config['locale']['Map_Lobby2']
+                        local_map = config['locale']['Map_Lobby']
                     case "Battlefield_Main_New":
                         local_map = config['locale']['Battlefield_Main_New']
                     case "CountyTown_Main":

@@ -86,7 +86,7 @@ async def update():
         description=f"",
     )
     embeds.append(addition_embed)
-
+    TotalPlayers = 0
     for url in urls:
         response = requests.get(url)
         data = response.json()
@@ -146,13 +146,17 @@ async def update():
                 color=disnake.Color.green()
             )
             embeds.append(embed)
+            TotalPlayers += server_data.get('online', 0)
 
     masstitle = ""
-    masstext = ""
+    try:
+        masstext = f"{config['locale']['TotalPlayers']}: **{TotalPlayers}**\n"
+    except Exception as e:
+        masstext = f"Total Players: **{TotalPlayers}**\n"
+
     for embed in embeds:
         masstext += f'\n**{embed.title}**\n' if embed.title else ''
         masstext += f'{embed.description}\n' if embed.description else ''
-    
     addition_embed = disnake.Embed(
         title=f"{additions}",
         description=f"{masstext}",

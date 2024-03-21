@@ -125,7 +125,7 @@ async def update():
                     case "CountyTown_Main_Special":
                         local_map = config['locale']['CountyTown_Main_Special']
                     case "PrefectureWar_Main_Special":
-                        local_map = config['locale']['PrefectureWar_Main_Special ']
+                        local_map = config['locale']['PrefectureWar_Main_Special']
                     case "RaceHorse01_Main":
                         local_map = config['locale']['RaceHorse01_Main']
             except Exception as e:

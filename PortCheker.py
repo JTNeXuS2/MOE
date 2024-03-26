@@ -1,7 +1,7 @@
 import http.server
 import socketserver
 import socket
-
+# Тестировать например отсюда https://www.networkcenter.info/tests/portcheck
 # Запрос портов у пользователя
 http_port = input("Введите номер порта для HTTP и UDP сервера: ")
 udp_port = http_port

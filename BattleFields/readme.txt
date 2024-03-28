@@ -14,6 +14,7 @@ CountyTown_Main_Special - Siege - 23\03\2024 16:00:00
 Battlefield_Main_New - Plaint - 18\03\2024 17:00:00
 Battlefield_Gorge_Main - Gobi - 23\03\2024 04:00:00
 PrefectureWar_Main_Special - Asia - 17\03\2024 16:00:00
+WarofThePass_Main_Special - Fortress
 
 ### Installation
 Download RunAsDate.exe and BattleField_Looper.bat

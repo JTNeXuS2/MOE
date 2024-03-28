@@ -1,3 +1,17 @@
+более нет необходимости, используем стандартное средство добавив ForceOnFairBattle
+пример
+Battlefield_Main_New ... -ActivityServer=true -ForceOnFairBattle=true -CheatActivityMap=WarofThePass_Main_Special 
+
+набор карт для параметра CheatActivityMap
+Battlefield_Main_New- Justics1
+Battlefield_Gorge_Main - Justics2
+CountyTown_Main_Special - CountyTown
+PrefectureWar_Main_Special -  Prefecture
+WarofThePass_Main_Special - Fortress
+
+for gvg
+CountyTown_Main ... -ActivityServer=false
+
 ### Установка
 Скачать RunAsDate.exe и BattleField_Looper.bat
 Поместить в директорию C:\вашкластер\MatrixServerTool

@@ -1,3 +1,4 @@
+### RU
 более нет необходимости, используем стандартное средство добавив ForceOnFairBattle
 пример
 Battlefield_Main_New ... -ActivityServer=true -ForceOnFairBattle=true -CheatActivityMap=WarofThePass_Main_Special 
@@ -29,6 +30,22 @@ Battlefield_Main_New - Plaint - 18\03\2024 17:00:00
 Battlefield_Gorge_Main - Gobi - 23\03\2024 04:00:00
 PrefectureWar_Main_Special - Asia - 17\03\2024 16:00:00
 WarofThePass_Main_Special - Fortress
+
+
+### EN
+no longer necessary, use the standard tool by adding ForceOnFairBattle
+example
+Battlefield_Main_New ... -ActivityServer=true -ForceOnFairBattle=true -CheatActivityMap=WarofThePass_Main_Special 
+
+набор карт для параметра CheatActivityMap
+Battlefield_Main_New- Justics1
+Battlefield_Gorge_Main - Justics2
+CountyTown_Main_Special - CountyTown
+PrefectureWar_Main_Special -  Prefecture
+WarofThePass_Main_Special - Fortress
+
+for gvg
+CountyTown_Main ... -ActivityServer=false
 
 ### Installation
 Download RunAsDate.exe and BattleField_Looper.bat

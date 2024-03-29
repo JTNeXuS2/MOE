@@ -111,13 +111,18 @@ async def update():
                 local_map = f"{local_map}"
 
             pvptype = str(custom_info['pvp_type'])
-            match pvptype:
-                case "0":
-                    pvptype = "**PVP**"
-                case "1":
-                    pvptype = "**PVE**"
-                case _:
-                    pvptype = "N/A"
+            try:
+                match pvptype:
+                    case "0":
+                        pvptype = "PVP"
+                    case "1":
+                        pvptype = "PVE"
+                    case _:
+                        pvptype = "N/A"
+                pvptype = config['locale'][f'{pvptype}']
+            except Exception as e:
+                pvptype = f"{pvptype}"
+
             color = disnake.Color.random()
             maxplayers = int(custom_info.get('maxplayer', 0) or (custom_info.get('r_hukou', 0) + (custom_info.get('r_playernum', 100) / (1 - custom_info.get('pct_playernum', 0)))))
             embed = disnake.Embed(

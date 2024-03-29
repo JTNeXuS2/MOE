@@ -127,7 +127,7 @@ async def update():
             maxplayers = int(custom_info.get('maxplayer', 0) or (custom_info.get('r_hukou', 0) + (custom_info.get('r_playernum', 100) / (1 - custom_info.get('pct_playernum', 0)))))
             embed = disnake.Embed(
                 title=server_data.get('name', 'N/A'),
-                description=f":green_circle: Online: {server_data.get('online', '0')}/{maxplayers}\n Map: {local_map}\n Type: {pvptype}\nDescription: {custom_info.get('desc', 'N/A')}",
+                description=f":green_circle: Online: **{server_data.get('online', '0')}/{maxplayers}**\n Map: {local_map}\n Type: {pvptype}\nDescription: {custom_info.get('desc', 'N/A')}",
                 color=disnake.Color.green()
             )
             embeds.append(embed)

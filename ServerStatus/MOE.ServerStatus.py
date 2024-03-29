@@ -106,27 +106,7 @@ async def update():
             config = read_cfg()
             local_map = custom_info['map_name']
             try:
-                match local_map:
-                    case "LargeTerrain_Central2_Main":
-                        local_map = config['locale']['LargeTerrain_Central2_Main']
-                    case "LargeTerrain_Central_Main":
-                        local_map = config['locale']['LargeTerrain_Central_Main']
-                    case "Map_Lobby":
-                        local_map = config['locale']['Map_Lobby']
-                    case "Battlefield_Main_New":
-                        local_map = config['locale']['Battlefield_Main_New']
-                    case "CountyTown_Main":
-                        local_map = config['locale']['CountyTown_Main']
-                    case "Battlefield_Gorge_Main":
-                        local_map = config['locale']['Battlefield_Gorge_Main']
-                    case "NewYear_01_Main":
-                        local_map = config['locale']['NewYear_01_Main']
-                    case "CountyTown_Main_Special":
-                        local_map = config['locale']['CountyTown_Main_Special']
-                    case "PrefectureWar_Main_Special":
-                        local_map = config['locale']['PrefectureWar_Main_Special']
-                    case "RaceHorse01_Main":
-                        local_map = config['locale']['RaceHorse01_Main']
+                local_map = config['locale'][f'{local_map}']
             except Exception as e:
                 local_map = f"{local_map}"
 

@@ -21,7 +21,7 @@ set "WEBHOOK_URL=https://discord.com/api/webhooks/1222834102860910603/shduashday
 
 :: ANNONCE
 echo Discord annonce 1
-set "MESSAGE=@here\n Плановый рестарт!\n Кластер будет перезагружен через 10 минут!"
+set "MESSAGE=@here\n Плановый рестарт\n Кластер будет перезагружен через 10 минут"
 set "rconmessage=Рестарт_через_10_минут"
 curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"%MESSAGE%\"}" %WEBHOOK_URL%
 %mcrcon_dir%\mcrcon.exe -H 127.0.0.1 -P 8012 -p superpass "BroadcastNotifySysInfo %rconmessage% 1 0"
@@ -30,7 +30,7 @@ curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"%MESSAGE%\"}
 timeout /t 300
 
 echo Discord annonce 2
-set "MESSAGE= Плановый рестарт!\n Кластер будет перезагружен через 5 минут!"
+set "MESSAGE= Плановый рестарт\n Кластер будет перезагружен через 5 минут"
 set "rconmessage=Рестарт_через_5_минут"
 curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"%MESSAGE%\"}" %WEBHOOK_URL%
 %mcrcon_dir%\mcrcon.exe -H 127.0.0.1 -P 8012 -p superpass "BroadcastNotifySysInfo %rconmessage% 1 0"
@@ -39,7 +39,7 @@ curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"%MESSAGE%\"}
 timeout /t 240
 
 echo Discord annonce 3
-set "MESSAGE=@here\n Плановый рестарт!\n Кластер будет перезагружен через 1 минуту!"
+set "MESSAGE=@here\n Плановый рестарт\n Кластер будет перезагружен через 1 минуту"
 set "rconmessage=Рестарт_через_1_минуту"
 curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"%MESSAGE%\"}" %WEBHOOK_URL%
 %mcrcon_dir%\mcrcon.exe -H 127.0.0.1 -P 8012 -p superpass "BroadcastNotifySysInfo %rconmessage% 1 0"

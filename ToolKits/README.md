@@ -132,3 +132,8 @@ can be found me in the discord.  https://discord.com/invite/qYmBmDR
 can be found timex in the Dogs of War discord.  https://discord.com/invite/8y5keJYzK3
 
 General community support is also available in the MOE Admins United discord. https://discord.gg/7vrFzfAMvG
+
+
+### [Donate for me](https://yoomoney.ru/to/4100116619431314)
+#
+https://fkwallet.io  ID: F7202415841873335

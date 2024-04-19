@@ -1,0 +1,4 @@
+all,1440
+AddItemToPlayer {s_account_uid} 4532 1 1 1 -1 1.000000
+AddItemToPlayer {s_account_uid} 4534 1 1 1 -1 1.000000
+AddItemToPlayer {s_account_uid} 2021 3 1 1 -1 1.000000

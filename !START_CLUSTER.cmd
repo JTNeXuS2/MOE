@@ -66,6 +66,17 @@ if not "%processpid%"=="" (
 	cd "%basedir%\scripts\Logon" && start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 1
 )
+
+:::MOE ToolKits
+set "WindowTitle=MOE ToolKits" && set "processpid="
+for /f "tokens=*" %%a in ('powershell.exe -command "$Processes = Get-Process; $Processes | Where-Object {$_.MainWindowTitle -like '*%WindowTitle%*'} | ForEach-Object {Write-Output $_.Id}"') do set processpid=%%a
+if not "%processpid%"=="" (
+    echo Found %WindowTitle% PID: %processpid%
+) else (
+    echo Process %WindowTitle% not found && echo Started %WindowTitle%
+	cd "%basedir%\scripts\ToolKits" && start "%WindowTitle%" "^!Start.cmd"
+	timeout /t 1
+)
 ::: END PERIPHERAL SERVERS
 
 cd %basedir%\MatrixServerTool

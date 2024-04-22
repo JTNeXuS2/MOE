@@ -12,7 +12,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-    cd "%basedir%\CHAT\Redis" && start "%WindowTitle%" "^!Start.cmd"
+    cd "%basedir%\Redis" && start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 3
 )
 :::SQL

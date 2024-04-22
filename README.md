@@ -35,7 +35,10 @@ Kits/InGame chat to discord
   C:\moe_cluster\scripts\ToolKits\!Start.cmd
   C:\moe_cluster\scripts\ToolKits\ToolKits.py
 ```
+![Screenshot_4](https://github.com/JTNeXuS2/MOE/assets/88918931/af17352b-f102-407b-a06a-9bd4797dfc77)
+
 
 ### [Donate for me](https://yoomoney.ru/to/4100116619431314)
 #
 https://fkwallet.io  ID: F7202415841873335
+

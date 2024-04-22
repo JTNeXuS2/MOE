@@ -35,6 +35,17 @@ Kits/InGame chat to discord
   C:\moe_cluster\scripts\ToolKits\!Start.cmd
   C:\moe_cluster\scripts\ToolKits\ToolKits.py
 ```
+### Auto_Update_Backup_Claster
+`main demon auto backup server saves/check updates/auto start any process claster`
+### !START_CLUSTER.cmd
+`control script manualy start cluster`
+### SetSeceneNames.cmd
+`control script setup addition configs server via rcon after start`
+
+### ShedulerRestart.cmd
+`solo script auto start with windows scheduler daily auto restart scene servers and bg`
+
+### example work window
 ![Screenshot_4](https://github.com/JTNeXuS2/MOE/assets/88918931/af17352b-f102-407b-a06a-9bd4797dfc77)
 
 

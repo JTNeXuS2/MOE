@@ -1,7 +1,7 @@
-any tools for MOE CLUSTER server
+# Tools and bot/demons for MOE CLUSTER server
 
-  Dir Tree
-```
+## Dir Tree
+ ```
 C:\moe_cluster\
 C:\moe_cluster\Redis\!start.cmd
 C:\moe_cluster\mysql\!Start.cmd

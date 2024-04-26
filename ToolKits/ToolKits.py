@@ -76,21 +76,14 @@ def initialize_csv():
 initialize_csv()
 
 def execute_kit(channel_friendly_name, s_account_uid, kit_name):
-
-    # Mapping of channel friendly names to RCON Ports.
-    port_mapping = {
-        "100": "8012",
-        "200": "8022",
-        "300": "8032"
-    }
     port = port_mapping.get(channel_friendly_name, "1234")
     commands = []
-
     try:
         with open(f'kits/{kit_name}.txt', 'r') as file:
             lines = file.readlines()
-            first_line = lines[0].strip().split(',')[0]
-            if first_line == "random":
+            first_line = lines[0].strip()
+            issuance = first_line.split(',')[0]
+            if issuance == "random":
                 random_line = random.choice(lines[1:])
                 modified_line = f"{rcon_path}mcrcon.exe -H 65.109.113.61 -P {port} -p {rcon_password} -w 5 \"{random_line.strip().replace('{s_account_uid}', s_account_uid)}\""
                 commands.append(modified_line)
@@ -98,6 +91,10 @@ def execute_kit(channel_friendly_name, s_account_uid, kit_name):
                 for line in lines[1:]:
                     modified_line = f"{rcon_path}mcrcon.exe -H 65.109.113.61 -P {port} -p {rcon_password} -w 5 \"{line.strip().replace('{s_account_uid}', s_account_uid)}\""
                     commands.append(modified_line)
+    except FileNotFoundError:
+        print("Kit not found.")
+        return
+    return commands, first_line
 
     except FileNotFoundError:
         print("Kit not found.")

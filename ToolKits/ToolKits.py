@@ -89,7 +89,7 @@ def execute_kit(channel_friendly_name, s_account_uid, kit_name):
     try:
         with open(f'kits/{kit_name}.txt', 'r') as file:
             lines = file.readlines()
-            first_line = lines[0].strip()
+            first_line = lines[0].strip().split(',')[0]
             if first_line == "random":
                 random_line = random.choice(lines[1:])
                 modified_line = f"{rcon_path}mcrcon.exe -H 65.109.113.61 -P {port} -p {rcon_password} -w 5 \"{random_line.strip().replace('{s_account_uid}', s_account_uid)}\""

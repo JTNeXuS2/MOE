@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import requests
 import subprocess
 import random
+import asyncio
 
 load_dotenv()
 
@@ -19,12 +20,33 @@ local_channels = list(channel_names.keys())
 webhook_url = os.getenv('DISCORD_WEBHOOK')
 rcon_path = os.getenv('RCON_PATH')
 rcon_password = os.getenv('RCON_PASSWORD')
+chat_url = os.getenv('CHAT_WEBHOOK')
+
+#print(f"channel:server\n {channel_names}")
+
+# Mapping of channel friendly names to RCON Ports.
+
+port_mapping_str = os.getenv("PORT_MAPPING")
+port_mapping = {key: value for key, value in [pair.split('=') for pair in port_mapping_str.split(',')]}
+
+db_config = {
+    'host': os.getenv('DB_HOST', '127.0.0.1'),
+    'port': os.getenv('DB_PORT', '3306'),
+    'user': os.getenv('DB_USER', 'root'),
+    'password': os.getenv('DB_PASSWORD', 'root'),
+    'database': os.getenv('DB_DATABASE', 'moe_role')
+}
+
+annonce_servers = [(address.split('=')[0], address.split('=')[1]) for address in os.getenv('NOTIFY_IP_PORTS', '').split(',') if '=' in address]
+announcement_cd = os.getenv('ANONCE_CD')
+#print(f"annonce_servers\n {annonce_servers}")
 
 db_path = os.getenv('DATABASE_PATH', 'C:\\Moenew\\WindowsPrivateServer\\MOE\\Saved\\SaveGames\\BigPrivate\\moe_role.db')
 
 csv_file_path = 'account_log.csv'
-
+announcement_file = 'announcement.txt'
 logging_file = 'Commands.log'
+
 def log_to_file(text):
     today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     string = f"{today} >> {text}"

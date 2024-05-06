@@ -189,7 +189,7 @@ timeout /t 5
 
 :::BATTLE BG
 set "serverid=7010"
-set "readbatch=StartSceneServer_%serverid%.bat"
+set "readbatch=StartBattleServer_%serverid%.bat"
 set "WindowTitle=ServerId-%serverid%"
 set "processpid=" && set "runparam="
 for /f "tokens=*" %%a in ('powershell.exe -command "$Processes = Get-Process; $Processes | Where-Object {$_.MainWindowTitle -like '*%WindowTitle%*'} | ForEach-Object {Write-Output $_.Id}"') do set processpid=%%a
@@ -197,14 +197,31 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-    ::start "%WindowTitle%" "battle_%serverid%.bat"
-    call "StartBattleServer_%serverid%.bat"
-    set "setup=1"
-    timeout /t 5
+    ::get day map
+    for /f "delims=" %%# in ('powershell.exe -command "(Get-Date).DayOfWeek.value__"') do set "day=%%#"
+    if !day! equ 1 (set "battlemap=WarofThePass_Main_Special")
+    if !day! equ 2 (set "battlemap=CountyTown_Main_Special")
+    if !day! equ 3 (set "battlemap=Battlefield_Main_New")
+    if !day! equ 4 (set "battlemap=WarofThePass_Main_Special")
+    if !day! equ 5 (set "battlemap=Battlefield_Gorge_Main")
+    if !day! equ 6 (set "battlemap=Battlefield_Main_New")
+    if !day! equ 7 (set "battlemap=PrefectureWar_Main_Special")
+    echo Day of the week: !day! Battle map for today: !battlemap!
+    ::set sturt params
+    for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
+    set "line=%%a"
+    if defined line (
+        set "line=!line:*start "MOEServer.exe - PrivateServer" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" =!"
+        set "runparam=!runparam!!line!"
+    )
+)
+start "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" Battlefield_Main_New -game -server -CheatActivityMap=!battlemap! !runparam!
+set "setup=1"
+timeout /t 5
 )
 :::BATTLE GvG
 set "serverid=7020"
-set "readbatch=StartSceneServer_%serverid%.bat"
+set "readbatch=StartBattleServer_%serverid%.bat"
 set "WindowTitle=ServerId-%serverid%"
 set "processpid=" && set "runparam="
 for /f "tokens=*" %%a in ('powershell.exe -command "$Processes = Get-Process; $Processes | Where-Object {$_.MainWindowTitle -like '*%WindowTitle%*'} | ForEach-Object {Write-Output $_.Id}"') do set processpid=%%a

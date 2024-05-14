@@ -1,5 +1,5 @@
 # Tools and bot/demons for MOE CLUSTER server
-
+[![Discord](https://discordapp.com/api/guilds/626106205122592769/widget.png?style=shield)](https://discord.gg/qYmBmDR)
 ## Dir Tree
  ```
 C:\moe_cluster\

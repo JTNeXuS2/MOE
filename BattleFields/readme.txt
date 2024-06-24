@@ -69,3 +69,9 @@ I haven’t checked
 https://github.com/wolfcw/libfaketime
 $ sudo apt install faketime
 $ faketime '2024-03-16 04:00:00' date
+
+#### find me on discord [![Discord](https://discordapp.com/api/guilds/626106205122592769/widget.png?style=shield)](https://discord.gg/qYmBmDR)
+#### Donate for me
+#### [yoomoney](https://yoomoney.ru/to/4100116619431314)
+https://fkwallet.io  ID: F7202415841873335
+#### [boosty](https://boosty.to/_illidan_)

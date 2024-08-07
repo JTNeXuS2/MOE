@@ -57,14 +57,15 @@ def log_to_file(text):
         print(f"Error while logging to file: {e}")
 
 kits = []
-for filename in os.listdir('kits'):
-    if filename.endswith('.txt'):
-        file_name = os.path.splitext(filename)[0]
-        kits.append(file_name)
+def get_kits():
+    for filename in os.listdir('kits'):
+        if filename.endswith('.txt'):
+            file_name = os.path.splitext(filename)[0]
+            kits.append(file_name)
 
 def initialize_csv():
     try:
-        with open(csv_file_path, 'a+', newline='') as csvfile:
+        with open(csv_file_path, 'a+', newline='', encoding='utf-8') as csvfile:
             csvfile.seek(0)
             if not csvfile.read(1):
                 writer = csv.writer(csvfile)
@@ -96,10 +97,13 @@ def execute_kit(channel_friendly_name, s_account_uid, kit_name):
         return
     return commands, first_line
 
-    except FileNotFoundError:
-        print("Kit not found.")
-        return
-    return commands, first_line
+def execute_response(channel_friendly_name, s_account_uid, kit_name, answer):
+    port = port_mapping.get(channel_friendly_name, "1234")
+    commands = []
+    #modified_line = f'{rcon_path}PyRcon.exe -ip 65.109.113.61 -p {port} -pass {rcon_password} -c BroadcastNotifySysInfo \"{answer.strip().replace('{s_account_uid}', s_account_uid)}\" 1 0'
+    modified_line = [rcon_path + 'PyRcon.exe', '-ip', '65.109.113.61', '-p', port, '-pass', rcon_password, '-c', f'BroadcastNotifySysInfo "{answer.strip().replace(s_account_uid, s_account_uid)}" 1 0']
+    commands.append(modified_line)
+    return commands
 
 def execute_commands(commands):
     for command in commands:
@@ -114,7 +118,7 @@ def process_account(account_id, from_nick, to_channel, kit_name):
     channel_friendly_name = channel_names.get(to_channel, "Unknown Channel")
     log_to_file(f'{channel_friendly_name}: {account_id}:{from_nick}: type>> {kit_name}')
     try:
-        with open(csv_file_path, 'r', newline='') as csvfile:
+        with open(csv_file_path, 'r', newline='', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
             header = next(reader)
 
@@ -125,6 +129,10 @@ def process_account(account_id, from_nick, to_channel, kit_name):
                     if today < row_datetime and row[3] == '0':
                         print(f"User {from_nick} has already executed the command today.")
                         log_to_file(f"User {from_nick} has already executed the command today.")
+                        
+                        answer = f"Кит выдан для {from_nick} Кулдаун до({row_datetime})"
+                        commands = execute_response(channel_friendly_name, account_id, kit_name, answer)
+                        execute_commands(commands)
                         return
                     elif row[3] != '0':
                         print(f"User {from_nick} is banned.")
@@ -136,11 +144,15 @@ def process_account(account_id, from_nick, to_channel, kit_name):
                         row[2] = (today + timedelta(minutes=int(cooldown))).strftime('%Y-%m-%d %H:%M:%S')
                         print(f"Date for user {from_nick} is being updated to today.")
                         execute_commands(commands)
+                        
+                        answer = f"Кит выдан для {from_nick} Кулдаун до({row[2]})"
+                        commands = execute_response(channel_friendly_name, account_id, kit_name, answer)
+                        execute_commands(commands)
                         send_to_discord(channel_friendly_name, from_nick, f'Claimed their daily login reward by typing *** /{kit_name} *** into Nearby chat')
                 accounts.append(row)
         sorted_accounts = sorted(accounts, key=lambda x: x[1])
 
-        with open(csv_file_path, 'w', newline='') as csvfile:
+        with open(csv_file_path, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(header)
             writer.writerows(sorted_accounts)
@@ -150,25 +162,43 @@ def process_account(account_id, from_nick, to_channel, kit_name):
                 print(f"Kit>> {kit_name} CD>> {cooldown}")
                 cooldown_date = (today + timedelta(minutes=int(cooldown))).strftime('%Y-%m-%d %H:%M:%S')
                 writer.writerow([account_id, from_nick, cooldown_date, '0', kit_name])
-                print(f"Entry for user {from_nick} has been added.")
+                print(f"Entry for user {from_nick} has been added.")  
                 log_to_file(f"Entry for user {from_nick} has been added.")
+
                 execute_commands(commands)
+                
+                answer = f"Кит выдан для {from_nick} Кулдаун до({cooldown_date})"
+                commands = execute_response(channel_friendly_name, account_id, kit_name, answer)
+                execute_commands(commands)
+                
                 send_to_discord(channel_friendly_name, from_nick, f'Claimed their daily login reward by typing *** /{kit_name} *** into Nearby chat')
 
     except IOError as e:
         print(f"IOError while processing account: {e}")
 
+'''
+def get_account_id(s_role_uid):
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT s_account_id FROM moe_roles WHERE s_role_uid = ?", (s_role_uid,))
+        account_id = cursor.fetchone()
+        conn.close()
+        return account_id[0] if account_id else None
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        return None
+'''
+#
+# If we wanted to use MySQL or a variant, this might be a viable replacement for get_account_id. I have no way to test this, so it's commented.
+# If you want to try this out, just comment the old get_account_id, uncomment this one (maybe move the imports to the top of the script...)
+#   and add your mysql connection information to the conn = mysqlconnector.connect block.
+#
+
 import mysql.connector
 from mysql.connector import Error
 
 def get_account_id(s_role_uid):
-    db_config = {
-        'host': '65.109.113.61',
-        'port': '3306',
-        'user': 'sql_user',
-        'password': 'sql_password',
-        'database': 'moe_role'
-    }
     try:
         conn = mysql.connector.connect(
             host=db_config['host'],
@@ -182,22 +212,32 @@ def get_account_id(s_role_uid):
         account_id = cursor.fetchone()
         cursor.close()
         conn.close()
+        
         data = account_id[0]
-        decoded_str = data.decode('utf-8')
+        try:
+            decoded_str = data.decode('utf-8')
+        except AttributeError:
+            print(f'data is string')
+            decoded_str = str(data)
+
         return decoded_str if decoded_str else None
     except Error as e:
         print(f"Database error: {e}")
         return None
+
 
 def find_latest_file(directory):
     list_of_files = glob.glob(f'{directory}*')
     latest_file = max(list_of_files, key=os.path.getctime)
     return latest_file
 
-def watch_log_file(directory):
+
+async def watch_log_file(directory):
     current_file = find_latest_file(directory)
     file_position = os.path.getsize(current_file)
-
+    counter = 5
+    anonce_line = 0
+    print("watch log start")
     while True:
         try:
             new_file = find_latest_file(directory)
@@ -215,20 +255,53 @@ def watch_log_file(directory):
 
         except Exception as e:
             print(f"Error encountered: {e}")
-            time.sleep(5)
+            await asyncio.sleep(5)
             continue
+        if counter <= 0:
+            anonce_line = send_annoncements(anonce_line)
+            counter = int(announcement_cd) * 60
+        counter -= 1
+        await asyncio.sleep(1)
 
-        time.sleep(1)
 
 def check_csv_for_entry(from_role_uid):
     today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open(csv_file_path, 'r', newline='') as csvfile:
+    with open(csv_file_path, 'r', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             if row['s_account_uid'] == from_role_uid:
                 is_today = row['Date'] == today
                 return True, is_today
     return False, False
+
+def cross_chat(to_channel, from_nick, content):
+    def escape_markdown(text):
+        markdown_chars = ['\\', '*', '_', '~', '`', '>', '|']
+        for char in markdown_chars:
+            text = text.replace(char, '\\' + char)
+        return text
+    def truncate_message(text, max_length=2000):
+        return text if len(text) <= max_length else text[:max_length-3] + '...'
+
+    from_nick = escape_markdown(from_nick)
+    content = escape_markdown(content)
+    content = truncate_message(content)
+
+    #content = content.encode().decode('unicode-escape')
+
+    parts = content.split("^^&&", 1)
+    guild = f"{parts[0]}:" if len(parts) > 1 else ''
+    text = parts[1] if len(parts) > 1 else parts[0]
+
+    channel_friendly_name = channel_names.get(to_channel, "Unknown Channel")
+
+    message = f"**{channel_friendly_name}**:{guild}**{from_nick}**: {text}"
+    data = {"content": message}
+    response = requests.post(chat_url, json=data)
+    if response.status_code != 204:
+        print(f"Error sending message to Discord: {response.status_code} - {response.text}")
+
+
 
 def process_line(line):
     try:
@@ -239,7 +312,7 @@ def process_line(line):
             from_nick = log_entry.get("from nick", "Unknown")
             content = log_entry.get("content", "")
             get_kit = f'{content.split('/')[-1]}'
-
+            get_kits()
             for kit_name in kits:
                 if f"/{kit_name}" == f"/{get_kit}":
                     entry_exists, is_today = check_csv_for_entry(from_role_uid)
@@ -254,8 +327,36 @@ def process_line(line):
                     else:
                         print(f"Account ID not found for the given role UID: {from_role_uid}.")
                     break
+            # send chat to discord
+            cross_chat(to_channel, from_nick, content)
+
     except json.JSONDecodeError as e:
         print(f"chat JSON decode error: {e}")
+ 
+def send_annoncements(anonce_line):
+    anonces = []
+    commands = []
+    if os.path.exists(announcement_file):
+        if anonce_line == 0 or not anonces:
+            try:
+                with open(announcement_file, 'r', encoding='utf-8') as file:
+                    anonces = file.readlines()
+            except FileNotFoundError:
+                print("Файл 'announcement.txt' невозможно прочитать.")
+        if anonces:
+            anonce_string = anonces[anonce_line % len(anonces)].strip()
+            for ip, port in annonce_servers:
+                modified_line = f'{rcon_path}PyRcon.exe -ip {ip} -p {port} -pass {rcon_password} -c BroadcastNotifySysInfo \"{anonce_string}\" 1 0'
+                commands.append(modified_line)
+            anonce_line += 1
+            #print(f'====\n {commands}')
+            try:
+                for command in commands:
+                    print(f"\nSent anonce >>\n {command}")
+                    subprocess.run(command, check=True, shell=True)
+            except Exception as e:
+                print(f"Sent anonce ERROR: {e}")
+            return anonce_line
 
 def send_to_discord(channel_friendly_name, from_nick, content):
     def escape_markdown(text):
@@ -263,6 +364,7 @@ def send_to_discord(channel_friendly_name, from_nick, content):
         for char in markdown_chars:
             text = text.replace(char, '\\' + char)
         return text
+
 
     def truncate_message(text, max_length=2000):
         return text if len(text) <= max_length else text[:max_length-3] + '...'
@@ -276,4 +378,9 @@ def send_to_discord(channel_friendly_name, from_nick, content):
         print(f"Error sending message to Discord: {response.status_code} - {response.text}")
 
 
-watch_log_file(log_directory)
+async def main():
+    get_kits()
+    #await send_annoncements()
+    await watch_log_file(log_directory)
+
+asyncio.run(main())

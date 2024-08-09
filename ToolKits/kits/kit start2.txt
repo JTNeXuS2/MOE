@@ -1,6 +1,6 @@
 all,900000
-AddItemToPlayer {s_account_uid} 2242 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 3773 4 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 2516 24 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 3772 4 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 2488 1 2 1 -1 5.000000
+AddItemToPlayer {s_account_uid} 2242 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 3773 4 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 2516 24 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 3772 4 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 2488 1 2 1 -1 5.000000 False

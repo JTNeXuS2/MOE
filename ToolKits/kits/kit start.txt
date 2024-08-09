@@ -1,13 +1,13 @@
 all,900000
 AddCopper {s_account_uid} 5000
-AddItemToPlayer {s_account_uid} 2579 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 2575 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 2587 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 2591 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 2582 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 342 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 377 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 358 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 2629 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 2542 1 2 1 -1 5.000000
-AddItemToPlayer {s_account_uid} 1653 100 2 1 -1 5.000000
+AddItemToPlayer {s_account_uid} 2579 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 2575 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 2587 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 2591 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 2582 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 342 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 377 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 358 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 2629 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 2542 1 2 1 -1 5.000000 False
+AddItemToPlayer {s_account_uid} 1653 100 2 1 -1 5.000000 False

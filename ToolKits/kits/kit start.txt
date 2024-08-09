@@ -1,5 +1,6 @@
 all,900000
 AddCopper {s_account_uid} 5000
+AddGeneralCharacterA 12 True 255 0 True 60 1 1 5 {s_account_uid}
 AddItemToPlayer {s_account_uid} 2579 1 2 1 -1 5.000000 False
 AddItemToPlayer {s_account_uid} 2575 1 2 1 -1 5.000000 False
 AddItemToPlayer {s_account_uid} 2587 1 2 1 -1 5.000000 False

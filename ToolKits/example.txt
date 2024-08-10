@@ -1,0 +1,8 @@
+all,1440
+AddCopper {s_account_uid} 1000
+AddSkillPublicExpToPlayer {s_account_uid} 5000
+AddItemToPlayer {s_account_uid} 4532 1 1 1 -1 1.000000 False
+AddItemToPlayer {s_account_uid} 4534 1 1 1 -1 1.000000 False
+AddItemToPlayer {s_account_uid} 2021 3 1 1 -1 1.000000 False
+AddGeneralCharacterA 12 True 255 0 True 60 1 1 5 {s_account_uid}
+AddVehicleA 5 True False 255 60 1 0.900000 1 {s_account_uid} True 2 2 2 2 2 0 600 True 0 0 0 0 True 2 

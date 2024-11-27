@@ -112,18 +112,23 @@ if exist %updateinprogress% (
 		    echo version: !installedVersion! - available: !availableVersion!
 		)
 	)
-	if "!installedVersion!" neq "!availableVersion!" (
-	    goto Kill
-
+	if "!availableVersion!" == "" (
+	    echo Update NOT AVAILEBLE. check steam connection
+	    timeout /t 3
+	    del /F %updateinprogress%
+	    goto Delay
 	) else (
-	    echo =================================
-	    echo Installed: !installedVersion!		^|^|
-	    echo available: !availableVersion!		^|^|
-	    echo =================================
-	    echo.
-	)
+	    if "!installedVersion!" neq "!availableVersion!" (
+	        goto Kill
+	    ) else (
+	        echo =================================
+	        echo Installed: !installedVersion!        ^|^|
+	        echo Available: !availableVersion!        ^|^|
+	        echo =================================
+	        echo.
+	    )
+)
 	del /F %updateinprogress%
-
 )
 echo Update Completed
 timeout /t 10

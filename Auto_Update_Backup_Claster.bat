@@ -112,11 +112,14 @@ if exist %updateinprogress% (
 		    echo version: !installedVersion! - available: !availableVersion!
 		)
 	)
+	:2way
 	if "!availableVersion!" == "" (
 	    echo Update NOT AVAILEBLE. check steam connection
+	    echo try secondway check
 	    timeout /t 3
 	    del /F %updateinprogress%
-	    goto Delay
+	    ::goto Delay
+	    goto recheck
 	) else (
 	    if "!installedVersion!" neq "!availableVersion!" (
 	        goto Kill
@@ -190,6 +193,44 @@ del /F %updateinprogress%>nul
 goto Delay
 
 EXIT
+
+:recheck
+::setlocal EnableDelayedExpansion
+set tmp_json="%dataPath%\temp.json"
+for /f %%x in ('powershell -command "Get-Date -format 'dd.MM.yyyy HH:mm:ss'"') do set datetime=%%x
+set "date_time=%datetime% %TIME%"
+if exist "%latestAvailableUpdate%" (set /p oldsteamdate=<"%latestAvailableUpdate%")
+cls
+echo Versions
+
+curl -s https://api.steamcmd.net/v1/info/%steamAppID% > %tmp_json%.tmp
+powershell -command "Get-Content -Path '%tmp_json%.tmp' | ConvertFrom-Json | ConvertTo-Json -Depth 100 | Out-File -FilePath '%tmp_json%' -Encoding utf8"
+echo.
+set "availableVersion="
+for /f "usebackq tokens=*" %%a in (%tmp_json%) do (
+    if "%%a" neq "" (
+        echo %%a | findstr /C:"buildid" > nul && (
+            for /f "tokens=2 delims=: " %%b in ("%%a") do (
+                set "availableVersion=%%b"
+                set "availableVersion=!availableVersion:"=!"
+                set "availableVersion=!availableVersion:,=!"
+            )
+        )
+    )
+)
+::for /F "tokens=*" %%F in ('curl -s https://api.steamcmd.net/v1/info/%steamAppID%') do set string=%%F
+::set status=%string:~-9,7%
+::set availableVersion=%string:~-38,10%
+echo OLD:%oldsteamdate%
+echo NEW:%availableVersion%
+::title OLD:%oldsteamdate% NEW:%availableVersion%
+if "%availableVersion%" == "Internal S" echo "%availableVersion%" Error get version, check again & timeout /t 60 & goto Delay
+if not "%oldsteamdate%"=="" if not "%availableVersion%"=="" if not "%availableVersion%"=="%oldsteamdate%" echo GO UPDATE availableVersion:%availableVersion% - oldsteamdate:%oldsteamdate% & timeout /t 3 & goto Kill
+set oldsteamdate=%availableVersion%
+echo write to file %availableVersion%
+echo %availableVersion%>%latestAvailableUpdate%
+timeout /t 3
+goto Delay
 
 :Kill
 color 0C

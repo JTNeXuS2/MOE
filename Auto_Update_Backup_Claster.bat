@@ -2,7 +2,14 @@
 chcp 65001>nul
 setlocal enabledelayedexpansion
 
+:: Rcon Password for annonce
 set rcon_pass=SUPERRCONPASSWORD
+:: DSiscord webhook for annonce
+set WEBHOOK_URL=https://discord.com/api/webhooks/1222834102860910603/_gC9JZOK9Q2TpGmNBwffffffffffffffffffffffffddddddddddd
+:: TIMERS in minutes for cycles
+set "updater=10"
+set "backaper=30"
+set "offline=2"
 
 
 set steamAppID=1794810
@@ -14,6 +21,7 @@ set rconPath=%root%\rcon
 set scriptPath=%root%\scripts
 set "backupDir=%serverPath%\ServerBackups"
 set "pack=%serverPath%\moe\Saved\SaveGames"
+set "sql=%root%\mysql"
 
 set dataPath=%serverPath%\updatedata
 set steamcmdExec="%steamCMDPath%\steamcmd.exe"
@@ -27,15 +35,6 @@ set latestInstalledUpdate="%dataPath%\latestinstalledupdate.txt"
 mode con:cols=70 lines=8
 cd "%root%\"
 if not exist "%backupDir%" (mkdir "%backupDir%")
-
-:: TIMERS in minutes
-set "updater=10"
-set "backaper=30"
-set "offline=4"
-
-::test anonc
-::set WEBHOOK_URL=https://discord.com/api/webhooks/1196595006593573024/78mSn0j_eoAb0xI7BGNzLAzww2JGYuj8pDYRC79eyuXgrr6REuyQbG3qeQ6GifQvQg92
-set WEBHOOK_URL=https://discord.com/api/webhooks/1222834102860910603/_gC9JZOK9Q2TpGmNBwffffffffffffffffffffffffddddddddddd
 
 set "counterone=%updater%"
 set "countertwo=0"
@@ -53,6 +52,9 @@ color 0A
 :Backup
 cls
 echo backing up...
+if exist "%pack%\SQL_backup" (rd /s /q "%pack%\SQL_backup")
+if not exist "%pack%\SQL_backup" (mkdir "%pack%\SQL_backup")
+xcopy "%sql%\data\*" "%pack%\SQL_backup\data\" /s /e /i /y
 for /f "tokens=1-5 delims=/:. " %%d in ("%date% %time%") do set "datetime=%%d.%%e.%%f__%%g;%%h"
 PowerShell.exe -command "Set-Location '%root%'; Compress-Archive -Path '%pack%' -DestinationPath '%backupDir%\%datetime%.zip' -CompressionLevel Optimal -Force"
 echo complete!
@@ -61,6 +63,9 @@ echo cleaning up old backups...
 PowerShell.exe -command "Set-Location '%backupDir%'; Get-ChildItem -File | Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-7) } | Remove-Item"
 echo cleanup complete!
 timeout /t 3
+
+:unbanips
+netsh advfirewall firewall delete rule name="Block Specific IP"
 goto Delay
 
 :Update
@@ -199,7 +204,7 @@ EXIT
 set tmp_json="%dataPath%\temp.json"
 for /f %%x in ('powershell -command "Get-Date -format 'dd.MM.yyyy HH:mm:ss'"') do set datetime=%%x
 set "date_time=%datetime% %TIME%"
-if exist "%latestAvailableUpdate%" (set /p oldsteamdate=<"%latestAvailableUpdate%")
+if exist "%latestinstalledupdate%" (set /p oldsteamdate=<"%latestinstalledupdate%")
 cls
 echo Versions
 

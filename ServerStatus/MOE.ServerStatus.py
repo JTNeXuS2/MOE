@@ -146,6 +146,8 @@ async def update():
         title=f"{additions}",
         description=f"{masstext}",
     )
+    activity = disnake.Game(name=f"Online: {TotalPlayers}")
+    await bot.change_presence(status=disnake.Status.online, activity=activity)
     return addition_embed
 
 @bot.event

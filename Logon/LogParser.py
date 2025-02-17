@@ -21,9 +21,11 @@ import proxycheck
 #Set discord webhook URL
 webhook_url = "https://discord.com/api/webhooks/1214978965471756418/444444444444444444444444444444444444444444"
 filename = 'wl.txt'
-token = 'BOT TOKEN lsadklasdk;laksdlas;d'
+token = 'BOT TOKEN'
 prefix = '/'
 apikey="get in https://proxycheck.io"
+
+db_file = 'db.txt'
 
 #Set admins SteamIDs, add custom param to find
 id_list = ['PostLogin Account: 76561198277462764', 'PostLogin Account: 76561198838209834', 'PostLogin Account: 76561198126416023',
@@ -85,16 +87,15 @@ async def send_discord_webhook(webhook_url, message):
         print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Error sending Discord webhook: {e}")
 
 def append_to_file(data):
-    filename = 'db.txt'
     try:
-        with open(filename, 'r', encoding='utf-8'):
+        with open(db_file, 'r', encoding='utf-8'):
             pass
     except FileNotFoundError:
-        with open(filename, 'w', encoding='utf-8'):
+        with open(db_file, 'w', encoding='utf-8'):
             pass
-
-    with open(filename, 'a', encoding='utf-8') as file:
+    with open(db_file, 'a', encoding='utf-8') as file:
         file.write(str(data) + '\n')
+
 def read_bl():
     try:
         with open('blacklist.txt', 'r', encoding='utf-8') as file:
@@ -134,6 +135,29 @@ def del_wl(steamid):
         print(f'SteamID {steamid} successfully removed from whitelist.')
     except Exception as e:
         print(f"Error writing to file: {e}")
+def update_db(steam_id, new_hwid):
+    try:
+        with open(db_file, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+        updated_lines = []
+        found = False
+        for line in lines:
+            parts = line.strip().split(', ')
+            if len(parts) > 1 and parts[1] == steam_id:
+                found = True
+                parts[-1] = new_hwid
+                line = ', '.join(parts)
+            if line.strip():  # Проверяем, что строка не пустая
+                updated_lines.append(line.strip() + '\n')  # Добавляем строку с переносом
+
+        if not found:
+            return 0
+        with open(db_file, 'w', encoding='utf-8') as file:
+            file.writelines(updated_lines)
+        return 1
+    except Exception as e:
+        print(f"Error updating {db_file}: {e}")
+        return
 
 def is_vpn_ip(ip_address):
     obj = IPWhois(ip_address)
@@ -187,7 +211,6 @@ async def ipcheck(Address):
         ip = client.ip(Address)
         return await ip.proxy()
     except Exception as e:
-        # Обработка исключения, если оно произошло
         print(f"Произошла ошибка при проверке IP адреса: {e}")
         return await ip.proxy()
 
@@ -209,7 +232,7 @@ async def registration(line, server_name):
         result_tuple = f'{NickName}, {UniqueId}, {Address}, {Port}, {DeviceId}'
         print(f'>>>>>Address: {Address} VPN: {Isvpn}')
 
-        with open('db.txt', 'r', encoding='utf-8') as f:
+        with open(db_file, 'r', encoding='utf-8') as f:
             lines = f.readlines()
             found = False
 
@@ -221,12 +244,22 @@ async def registration(line, server_name):
                         print(f"SteamID {UniqueId} in the whitelist!")
                         break
                     parts = entry.strip().split(', ')
-
-                    if DeviceId != parts[-1].strip(): # Проверка на несовпадение DeviceId
-                        print(f'BAN >>>>>> "{Address}" VPN: {Isvpn}%\n')
-                        #subprocess.run(f'cmd.exe /c netsh advfirewall firewall add rule name="Block Specific IP {Address}" dir=in action=block protocol=TCP remoteip={Address}', shell=True)
-                        subprocess.run(f'cmd.exe /c netsh advfirewall firewall add rule name="Block Specific IP" dir=in action=block protocol=TCP remoteip={Address}', shell=True)
-                        await send_discord_webhook(webhook_url, f"{server_name} @here CHEATER Login ```({result_tuple})```\n VPN: {Isvpn}")
+                    oldDeviceId = parts[-1].strip()
+                    oldAddress = parts[-3].strip()
+                    if DeviceId != oldDeviceId: # Проверка на несовпадение DeviceId
+                        if Address != oldAddress:
+                            print(f'BAN >>>>>> "{Address}" VPN: {Isvpn}%\n')
+                            #subprocess.run(f'cmd.exe /c netsh advfirewall firewall add rule name="Block Specific IP {Address}" dir=in action=block protocol=TCP remoteip={Address}', shell=True)
+                            ######subprocess.run(f'cmd.exe /c netsh advfirewall firewall add rule name="Block Specific IP" dir=in action=block protocol=TCP remoteip={Address}', shell=True)
+                            await send_discord_webhook(webhook_url, f"{server_name} @here CHEATER Login ```({result_tuple} OldID: {oldDeviceId})```\n VPN: {Isvpn}")
+                        else:
+                            await send_discord_webhook(webhook_url, f"{server_name} @here WARN Не баним```{NickName} т.к ип адрес {Address} совпадает (ID: {DeviceId}  OldID: {oldDeviceId})```\n VPN: {Isvpn}")
+                            parts[0] = NickName
+                            parts[2] = Address
+                            parts[3] = Port
+                            parts[-1] = DeviceId  # Обновляем DeviceId
+                            updated_entry = ', '.join(parts)  # Формируем новую строку
+                            lines[index] = updated_entry + '\n'  # Заменяем строку в файле
                     else:
                         parts[0] = NickName
                         parts[2] = Address
@@ -240,7 +273,7 @@ async def registration(line, server_name):
                 append_to_file(result_tuple)  # Добавляем новую запись, если не найдено совпадений
                 return Isvpn
 
-        with open('db.txt', 'w', encoding='utf-8') as f:
+        with open(db_file, 'w', encoding='utf-8') as f:
             f.writelines(lines)  # Перезаписываем файл с обновленными значениями
         return Isvpn
     else:
@@ -267,7 +300,6 @@ async def process_log_file(log_file):
         last_lines[log_filename] = len(log_lines)
     else:
         print(f"Key '{log_filename}' not found in last_lines dictionary")
-
 
 async def main():
     while True:
@@ -298,27 +330,57 @@ async def addsteam(ctx: disnake.ApplicationCommandInteraction, steamid: str):
     else:
         await ctx.response.send_message("❌ You do not have permission to run this command.", ephemeral=True)
 
+@bot.slash_command(description="Update HardWareID")
+async def update_hwid(ctx: disnake.ApplicationCommandInteraction, steam_id: str, new_hwid: str):
+    if ctx.author.guild_permissions.administrator:
+        steam_id = steam_id.strip()
+        new_hwid = new_hwid.strip()
+        status = update_db(steam_id, new_hwid)
+        try:
+            if status:
+                await ctx.send(f'HardWareID for {steam_id} :white_check_mark: \nUPDATED, new HWID:{new_hwid}', ephemeral=True)
+            if not status:
+                await ctx.send(f'SteamID: {steam_id} :negative_squared_cross_mark: \nNOT FOUND', ephemeral=True)
+        except Exception as e:
+            await ctx.send(f'ERROR UPDATE HardWareID: {steam_id}', ephemeral=True)
+    else:
+        await ctx.response.send_message("❌ You do not have permission to run this command.", ephemeral=True)
+
 @bot.slash_command(description="Show White List")
 async def showlist(ctx):
     if ctx.author.guild_permissions.administrator:
         whitelist = '\n'.join(read_wl())
-        await ctx.send(f'WhiteList:\n{whitelist}', ephemeral=True)
+        lines = whitelist.splitlines()
+        current_block, current_length = [], 0
+
+        for line in lines:
+            if current_length + len(line) + 1 > 1900:
+                await ctx.send(f'White List:\n' + '\n'.join(current_block), ephemeral=True)
+                current_block, current_length = [], 0
+            current_block.append(line)
+            current_length += len(line) + 1
+
+        if current_block:
+            await ctx.send(f'White List:\n' + '\n'.join(current_block), ephemeral=True)
     else:
         await ctx.response.send_message("❌ You do not have permission to run this command.", ephemeral=True)
 
 @bot.slash_command(description="Show Black List")
 async def showblacklist(ctx):
     if ctx.author.guild_permissions.administrator:
-        blacklist = read_bl()
-        
-        blacklist_str = '\n'.join(blacklist)
-        
-        if len(blacklist_str) <= 1900:
-            await ctx.send(f'blacklist:\n{blacklist_str}', ephemeral=True)
-        else:
-            parts = [blacklist_str[i:i+1900] for i in range(0, len(blacklist_str), 1900)]
-            for part in parts:
-                await ctx.send(f'blacklist (part):\n{part}', ephemeral=True)
+        blacklist = '\n'.join(read_bl())
+        lines = blacklist.splitlines()
+        current_block, current_length = [], 0
+
+        for line in lines:
+            if current_length + len(line) + 1 > 1900:
+                await ctx.send(f'White List:\n' + '\n'.join(current_block), ephemeral=True)
+                current_block, current_length = [], 0
+            current_block.append(line)
+            current_length += len(line) + 1
+
+        if current_block:
+            await ctx.send(f'White List:\n' + '\n'.join(current_block), ephemeral=True)
     else:
         await ctx.response.send_message("❌ You do not have permission to run this command.", ephemeral=True)
 

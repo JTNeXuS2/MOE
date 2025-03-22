@@ -21,6 +21,7 @@ webhook_url = os.getenv('DISCORD_WEBHOOK')
 rcon_path = os.getenv('RCON_PATH')
 rcon_password = os.getenv('RCON_PASSWORD')
 chat_url = os.getenv('CHAT_WEBHOOK')
+rcon_host = os.getenv('RCON_HOTS', '65.109.113.61')
 
 #print(f"channel:server\n {channel_names}")
 
@@ -86,11 +87,11 @@ def execute_kit(channel_friendly_name, s_account_uid, kit_name):
             issuance = first_line.split(',')[0]
             if issuance == "random":
                 random_line = random.choice(lines[1:])
-                modified_line = f"{rcon_path}mcrcon.exe -H 65.109.113.61 -P {port} -p {rcon_password} -w 5 \"{random_line.strip().replace('{s_account_uid}', s_account_uid)}\""
+                modified_line = f"{rcon_path}mcrcon.exe -H {rcon_host} -P {port} -p {rcon_password} -w 5 \"{random_line.strip().replace('{s_account_uid}', s_account_uid)}\""
                 commands.append(modified_line)
             else:
                 for line in lines[1:]:
-                    modified_line = f"{rcon_path}mcrcon.exe -H 65.109.113.61 -P {port} -p {rcon_password} -w 5 \"{line.strip().replace('{s_account_uid}', s_account_uid)}\""
+                    modified_line = f"{rcon_path}mcrcon.exe -H {rcon_host} -P {port} -p {rcon_password} -w 5 \"{line.strip().replace('{s_account_uid}', s_account_uid)}\""
                     commands.append(modified_line)
     except FileNotFoundError:
         print("Kit not found.")
@@ -100,8 +101,8 @@ def execute_kit(channel_friendly_name, s_account_uid, kit_name):
 def execute_response(channel_friendly_name, s_account_uid, kit_name, answer):
     port = port_mapping.get(channel_friendly_name, "1234")
     commands = []
-    #modified_line = f'{rcon_path}PyRcon.exe -ip 65.109.113.61 -p {port} -pass {rcon_password} -c BroadcastNotifySysInfo \"{answer.strip().replace('{s_account_uid}', s_account_uid)}\" 1 0'
-    modified_line = [rcon_path + 'PyRcon.exe', '-ip', '65.109.113.61', '-p', port, '-pass', rcon_password, '-c', f'BroadcastNotifySysInfo "{answer.strip().replace(s_account_uid, s_account_uid)}" 1 0']
+    #modified_line = f'{rcon_path}PyRcon.exe -ip {rcon_host} -p {port} -pass {rcon_password} -c BroadcastNotifySysInfo \"{answer.strip().replace('{s_account_uid}', s_account_uid)}\" 1 0'
+    modified_line = [rcon_path + 'PyRcon.exe', '-ip', '{rcon_host}', '-p', port, '-pass', rcon_password, '-c', f'BroadcastNotifySysInfo "{answer.strip().replace(s_account_uid, s_account_uid)}" 1 0']
     commands.append(modified_line)
     return commands
 

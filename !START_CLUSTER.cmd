@@ -150,7 +150,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
 call :ANNONCE
 start /LOW /affinity 0x0000000000FC0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam! -EnableParallelTickFunction -DisablePhysXSimulation -corelimit=6
 set "setup=1"
-timeout /t 5
+timeout /t 10
 )
 ::: PUB
 set "readbatch=StartPubDataServer.bat"
@@ -172,8 +172,13 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
 call :ANNONCE
 start /LOW /affinity 0x0000000000FC0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
-timeout /t 5
 )
+:: Wait... Loading Cluster core - Lobby and PUB
+if "%setup%" == "1" (
+    echo Wait... Loading Cluster core
+    timeout /t 15
+)
+
 ::: SCENES
 set "serverid=100"
 set "readbatch=StartSceneServer_%serverid%.bat"
@@ -284,7 +289,7 @@ if not "%processpid%"=="" (
     if !day! equ 5 (set "battlemap=Battlefield_Main_New")
     if !day! equ 6 (set "battlemap=Battlefield_Gorge_Main")
     ::if !day! equ 6 (set "battlemap=Mas_Battlefield_Main")
-    if !day! equ 7 (set "battlemap=PrefectureWar_Main_Special")
+    if !day! equ 7 (set "battlemap=Battlefield_Main_New")
     echo Day of the week: !day! Battle map for today: !battlemap!
     ::set sturt params
     for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (

@@ -1,9 +1,58 @@
 @echo off
 cd %~dp0
 chcp 65001>nul
-set "basedir=C:\moe_cluster"
+set "clusterpath=C:\moe_cluster"
 set "setup=0"
 setlocal enabledelayedexpansion
+
+color 0F
+::check daily restart & any start srcipts
+set "WindowTitle=MOE Check OFFLINE" && set "processpid="
+for /f "tokens=*" %%a in ('powershell.exe -command "$Processes = Get-Process; $Processes | Where-Object {$_.MainWindowTitle -like '*%WindowTitle%*'} | ForEach-Object {Write-Output $_.Id}"') do set processpid=%%a
+if not "%processpid%"=="" (
+    echo Found %WindowTitle% PID: %processpid% SKIPED
+	timeout /t 2
+	exit /b
+) else (
+    echo Process %WindowTitle% not found
+)
+
+title "MOE Check OFFLINE"
+
+set "WindowTitle=MOE ShedulerRestart" && set "processpid="
+for /f "tokens=*" %%a in ('powershell.exe -command "$Processes = Get-Process; $Processes | Where-Object {$_.MainWindowTitle -like '*%WindowTitle%*'} | ForEach-Object {Write-Output $_.Id}"') do set processpid=%%a
+if not "%processpid%"=="" (
+    echo Found %WindowTitle% PID: %processpid% SKIPED
+	timeout /t 2
+	exit /b
+) else (
+    echo Process %WindowTitle% not found
+)
+
+:: read config
+set "config_file=%~dp0demon.cfg"
+goto SKIP_FUNCTIONS
+:: ===== FUNCTIONS =====
+:read_param
+set "getparam=%~1"
+for /f "delims=" %%a in ('powershell -Command "(Get-Content -Encoding UTF8 '%config_file%' | Where-Object {$_ -match '%getparam%'}) -replace '.*=', ''"') do (
+    set "%getparam%=%%a"
+)
+exit /b
+:ANNONCE
+:: ANNONCE function
+if defined webhook_url (
+	set "dis_msg=%STARTMESSAGE%**%serverid%**"
+	curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!dis_msg!\"}" %WEBHOOK_URL%
+)
+exit /b
+:: ===== FUNCTIONS END =====
+:SKIP_FUNCTIONS
+
+:: ===== MAIN CODE =====
+
+call :read_param WEBHOOK_URL
+call :read_param STARTMESSAGE
 
 :::REDIS
 set "WindowTitle=MOE Redis Chat DB" && set "processpid="
@@ -12,7 +61,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-    cd "%basedir%\Redis" && start "%WindowTitle%" "^!Start.cmd"
+    cd "%clusterpath%\Redis" && start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 3
 )
 :::SQL
@@ -22,7 +71,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-    cd "%basedir%\mysql" && start "%WindowTitle%" "^!Start.cmd"
+    cd "%clusterpath%\mysql" && start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 3
 )
 :::OPT Service
@@ -32,7 +81,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-    cd "%basedir%\MatrixServerTool" && call "StartGameOptSys.bat"
+    cd "%clusterpath%\MatrixServerTool" && call "StartGameOptSys.bat"
 	timeout /t 3
 )
 :::Chat Service
@@ -42,7 +91,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-    cd "%basedir%\MatrixServerTool" && call "StartGameChatService.bat"
+    cd "%clusterpath%\MatrixServerTool" && call "StartGameChatService.bat"
 	timeout /t 3
 )
 :::ServerStatus
@@ -52,8 +101,8 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-	::cd "%basedir%\scripts\Status" && start "%WindowTitle%" "MOE.ServerStatus.exe"
-	cd "%basedir%\scripts\Status" && start "%WindowTitle%" "^!Start.cmd"
+	::cd "%clusterpath%\scripts\Status" && start "%WindowTitle%" "MOE.ServerStatus.exe"
+	cd "%clusterpath%\scripts\Status" && start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 1
 )
 :::LogParser
@@ -63,7 +112,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-	cd "%basedir%\scripts\Logon" && start "%WindowTitle%" "^!Start.cmd"
+	cd "%clusterpath%\scripts\Logon" && start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 1
 )
 
@@ -74,14 +123,14 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-	cd "%basedir%\scripts\ToolKits" && start "%WindowTitle%" "^!Start.cmd"
+	cd "%clusterpath%\scripts\ToolKits" && start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 1
 )
 ::: END PERIPHERAL SERVERS
 
-cd %basedir%\MatrixServerTool
+cd %clusterpath%\MatrixServerTool
 
-:::LOBBY
+::: LOBBY
 set "readbatch=StartLobbyServer.bat"
 set "serverid=6000"
 set "WindowTitle=ServerId-%serverid%"
@@ -98,11 +147,12 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-start /affinity 0x0000000000FA0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
+call :ANNONCE
+start /LOW /affinity 0x0000000000FC0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam! -EnableParallelTickFunction -DisablePhysXSimulation -corelimit=6
 set "setup=1"
 timeout /t 5
 )
-:::PUB
+::: PUB
 set "readbatch=StartPubDataServer.bat"
 set "serverid=6010"
 set "WindowTitle=ServerId-%serverid%"
@@ -119,11 +169,12 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-start /affinity 0x00000000000F0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
+call :ANNONCE
+start /LOW /affinity 0x0000000000FC0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
 timeout /t 5
 )
-:::SCENES
+::: SCENES
 set "serverid=100"
 set "readbatch=StartSceneServer_%serverid%.bat"
 set "WindowTitle=ServerId-%serverid%"
@@ -140,7 +191,8 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-start /affinity 0x00000000000000F0 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
+call :ANNONCE
+start /affinity 0x00000000000001F0 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
 timeout /t 5
 )
@@ -161,7 +213,8 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-start /affinity 0x0000000000000F00 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
+call :ANNONCE
+start /affinity 0x0000000000001F80 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
 timeout /t 5
 )
@@ -182,7 +235,32 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-start /affinity 0x000000000000F000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
+call :ANNONCE
+start /affinity 0x000000000003F000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam! -corelimit=6
+set "setup=1"
+timeout /t 5
+)
+
+:::
+set "serverid=400"
+set "readbatch=StartSceneServer_%serverid%.bat"
+set "WindowTitle=ServerId-%serverid%"
+set "processpid=" && set "runparam="
+for /f "tokens=*" %%a in ('powershell.exe -command "$Processes = Get-Process; $Processes | Where-Object {$_.MainWindowTitle -like '*%WindowTitle%*'} | ForEach-Object {Write-Output $_.Id}"') do set processpid=%%a
+if not "%processpid%"=="" (
+    echo Found %WindowTitle% PID: %processpid%
+) else (
+    echo Process %WindowTitle% not found && echo Started %WindowTitle%
+for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
+    set "line=%%a"
+    if defined line (
+        set "line=!line:*start "MOEServer.exe - PrivateServer" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" =!"
+        set "runparam=!runparam!!line!"
+    )
+)
+:: 0x000000000003F000
+call :ANNONCE
+start /affinity 0x000000000000FC00 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
 timeout /t 5
 )
@@ -199,12 +277,13 @@ if not "%processpid%"=="" (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
     ::get day map
     for /f "delims=" %%# in ('powershell.exe -command "(Get-Date).DayOfWeek.value__"') do set "day=%%#"
-    if !day! equ 1 (set "battlemap=WarofThePass_Main_Special")
-    if !day! equ 2 (set "battlemap=CountyTown_Main_Special")
+    if !day! equ 1 (set "battlemap=Battlefield_Main_New")
+    if !day! equ 2 (set "battlemap=Battlefield_Gorge_Main")
     if !day! equ 3 (set "battlemap=Battlefield_Main_New")
-    if !day! equ 4 (set "battlemap=WarofThePass_Main_Special")
-    if !day! equ 5 (set "battlemap=Battlefield_Gorge_Main")
-    if !day! equ 6 (set "battlemap=Battlefield_Main_New")
+    if !day! equ 4 (set "battlemap=Battlefield_Gorge_Main")
+    if !day! equ 5 (set "battlemap=Battlefield_Main_New")
+    if !day! equ 6 (set "battlemap=Battlefield_Gorge_Main")
+    ::if !day! equ 6 (set "battlemap=Mas_Battlefield_Main")
     if !day! equ 7 (set "battlemap=PrefectureWar_Main_Special")
     echo Day of the week: !day! Battle map for today: !battlemap!
     ::set sturt params
@@ -215,6 +294,7 @@ if not "%processpid%"=="" (
         set "runparam=!runparam!!line!"
     )
 )
+call :ANNONCE
 start "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" Battlefield_Main_New -game -server -CheatActivityMap=!battlemap! !runparam!
 set "setup=1"
 timeout /t 5
@@ -229,6 +309,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
+	call :ANNONCE
     call "StartBattleServer_%serverid%.bat"
     set "setup=1"
     timeout /t 5
@@ -236,7 +317,8 @@ if not "%processpid%"=="" (
 
 if "%setup%" == "1" (
     echo RCON Settings
-    call "C:\moe_cluster\scripts\SetSeceneNames.cmd"
+    timeout /t 5
+    call "%clusterpath%\scripts\SetSeceneNames.cmd"
 )
-echo EXIT
-TIMEOUT /t 10
+echo CheckOffline EXIT
+TIMEOUT /t 3

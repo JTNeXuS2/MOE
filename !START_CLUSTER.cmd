@@ -29,13 +29,12 @@ if not "%processpid%"=="" (
     echo Process %WindowTitle% not found
 )
 
-:: read config
+:: ===== FUNCTIONS read config ======================================
 set "config_file=%~dp0demon.cfg"
 goto SKIP_FUNCTIONS
-:: ===== FUNCTIONS =====
 :read_param
 set "getparam=%~1"
-for /f "delims=" %%a in ('powershell -Command "(Get-Content -Encoding UTF8 '%config_file%' | Where-Object {$_ -match '%getparam%'}) -replace '.*=', ''"') do (
+for /f "delims=" %%a in ('powershell -Command "(Get-Content -Encoding UTF8 '%config_file%' | Where-Object {$_ -match '^\s*%getparam%='}) -replace '.*=', ''"') do (
     set "%getparam%=%%a"
 )
 exit /b
@@ -46,13 +45,10 @@ if defined webhook_url (
 	curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!dis_msg!\"}" %WEBHOOK_URL%
 )
 exit /b
-:: ===== FUNCTIONS END =====
 :SKIP_FUNCTIONS
-
-:: ===== MAIN CODE =====
-
 call :read_param WEBHOOK_URL
 call :read_param STARTMESSAGE
+:: ===== FUNCTIONS read config END ======================================
 
 :::REDIS
 set "WindowTitle=MOE Redis Chat DB" && set "processpid="
@@ -150,7 +146,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
 call :ANNONCE
 start /LOW /affinity 0x0000000000FC0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam! -EnableParallelTickFunction -DisablePhysXSimulation -corelimit=6
 set "setup=1"
-timeout /t 10
+timeout /t 10 >nul
 )
 ::: PUB
 set "readbatch=StartPubDataServer.bat"
@@ -172,11 +168,12 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
 call :ANNONCE
 start /LOW /affinity 0x0000000000FC0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
+timeout /t 5 >nul
 )
 :: Wait... Loading Cluster core - Lobby and PUB
 if "%setup%" == "1" (
-    echo Wait... Loading Cluster core
-    timeout /t 15
+    echo Loading Cluster core. Wait...
+    timeout /t 20
 )
 
 ::: SCENES
@@ -199,7 +196,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
 call :ANNONCE
 start /affinity 0x00000000000001F0 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
-timeout /t 5
+timeout /t 3
 )
 :::
 set "serverid=200"
@@ -221,7 +218,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
 call :ANNONCE
 start /affinity 0x0000000000001F80 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
-timeout /t 5
+timeout /t 3
 )
 :::
 set "serverid=300"
@@ -243,7 +240,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
 call :ANNONCE
 start /affinity 0x000000000003F000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam! -corelimit=6
 set "setup=1"
-timeout /t 5
+timeout /t 3
 )
 
 :::
@@ -267,7 +264,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
 call :ANNONCE
 start /affinity 0x000000000000FC00 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
-timeout /t 5
+timeout /t 3
 )
 
 :::BATTLE BG

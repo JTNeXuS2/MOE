@@ -15,55 +15,81 @@ if %errorlevel% == 1 (
 	exit
 )
 
+:: ===== FUNCTIONS read config ======================================
+set "config_file=%~dp0demon.cfg"
+goto SKIP_FUNCTIONS
+:read_param
+set "getparam=%~1"
+for /f "delims=" %%a in ('powershell -Command "(Get-Content -Encoding UTF8 '%config_file%' | Where-Object {$_ -match '^\s*%getparam%='}) -replace '.*=', ''"') do (
+    set "%getparam%=%%a"
+)
+exit /b
+:SKIP_FUNCTIONS
+call :read_param WEBHOOK_URL
+call :read_param rcon_host
+call :read_param rcon_pass
+call :read_param MESSAGE1
+call :read_param MESSAGE2
+call :read_param MESSAGE3
+call :read_param rconmessage1
+call :read_param rconmessage2
+call :read_param rconmessage3
+:: ===== FUNCTIONS read config END ======================================
+
 set "clusterpath=C:\moe_cluster"
 set "mcrcon_dir=%clusterpath%\rcon"
 set "ConfigFile=%clusterpath%\MatrixServerTool\ServerParamConfig_All.ini"
-set "WEBHOOK_URL=https://discord.com/api/webhooks/1222834102860910603/fgdfgdfgdfgdfgdfgdfgdfgdfgdg"
-set "rcon_pass=SUPERPASSWORD"
-set "ip_adrs=65.109.113.61"
 
 :: ANNONCE
 echo Discord annonce 1
-set "MESSAGE=**Кластер**\n Плановый рестарт\n Сервер будет перезагружен через 10 минут"
-set "rconmessage=Рестарт через 10 минут"
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"%MESSAGE%\"}" %WEBHOOK_URL%
-%mcrcon_dir%\PyRcon.exe -ip %ip_adrs% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"%rconmessage%\" 1 0
-%mcrcon_dir%\PyRcon.exe -ip %ip_adrs% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"%rconmessage%\" 1 0
-%mcrcon_dir%\PyRcon.exe -ip %ip_adrs% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"%rconmessage%\" 1 0
+curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE1!\"}" !WEBHOOK_URL!
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
 timeout /t 300
 
 echo Discord annonce 2
-set "MESSAGE=**Кластер**\n Плановый рестарт\n Сервер будет перезагружен через 5 минут"
-set "rconmessage=Рестарт через 5 минут"
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"%MESSAGE%\"}" %WEBHOOK_URL%
-%mcrcon_dir%\PyRcon.exe -ip %ip_adrs% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"%rconmessage%\" 1 0
-%mcrcon_dir%\PyRcon.exe -ip %ip_adrs% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"%rconmessage%\" 1 0
-%mcrcon_dir%\PyRcon.exe -ip %ip_adrs% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"%rconmessage%\" 1 0
+curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE2!\"}" !WEBHOOK_URL!
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
 timeout /t 240
 
 echo Discord annonce 3
-set "MESSAGE=**Кластер**\n Плановый рестарт\n Сервер будет перезагружен через 1 минуту"
-set "rconmessage=Рестарт через 1 минуту"
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"%MESSAGE%\"}" %WEBHOOK_URL%
-%mcrcon_dir%\PyRcon.exe -ip %ip_adrs% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"%rconmessage%\" 1 0
-%mcrcon_dir%\PyRcon.exe -ip %ip_adrs% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"%rconmessage%\" 1 0
-%mcrcon_dir%\PyRcon.exe -ip %ip_adrs% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"%rconmessage%\" 1 0
-
-%mcrcon_dir%\mcrcon.exe -H %ip_adrs% -P 8012 -p %rcon_pass% SaveWorld
-%mcrcon_dir%\mcrcon.exe -H %ip_adrs% -P 8022 -p %rcon_pass% SaveWorld
-%mcrcon_dir%\mcrcon.exe -H %ip_adrs% -P 8032 -p %rcon_pass% SaveWorld
-timeout /t 60
+curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE3!\"}" !WEBHOOK_URL!
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
 
 echo Saving Worlds....
-TIMEOUT /t 20
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8012 -p %rcon_pass% SaveWorld
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8022 -p %rcon_pass% SaveWorld
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8032 -p %rcon_pass% SaveWorld
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8042 -p %rcon_pass% SaveWorld
+
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 6003 -p %rcon_pass% SaveWorld
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 6014 -p %rcon_pass% SaveWorld
+timeout /t 60
 
 echo Exiting Worlds...
-%mcrcon_dir%\mcrcon.exe -H %ip_adrs% -P 8012 -p %rcon_pass% ShutdownServer
-%mcrcon_dir%\mcrcon.exe -H %ip_adrs% -P 8022 -p %rcon_pass% ShutdownServer
-%mcrcon_dir%\mcrcon.exe -H %ip_adrs% -P 8032 -p %rcon_pass% ShutdownServer
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8012 -p %rcon_pass% ShutdownServer
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8022 -p %rcon_pass% ShutdownServer
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8032 -p %rcon_pass% ShutdownServer
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8042 -p %rcon_pass% ShutdownServer
+
+goto SKIP_LOBBY
+echo Stop Lobby and Pub
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 6003 -p %rcon_pass% ShutdownServer
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 6014 -p %rcon_pass% ShutdownServer
+:SKIP_LOBBY
+
 echo Stop BG
-%mcrcon_dir%\mcrcon.exe -H %ip_adrs% -P 7012 -p %rcon_pass% ShutdownServer
-TIMEOUT /t 10
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 7012 -p %rcon_pass% ShutdownServer
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 7022 -p %rcon_pass% ShutdownServer
+TIMEOUT /t 20
 
 :Secondkill
 :: second HARD kill if rcon not response
@@ -81,6 +107,6 @@ for /f "tokens=1 delims==" %%i in (%ConfigFile%) do (
 
 :Next
 echo Start Claster
-call "C:\moe_cluster\scripts\^!START_CLUSTER.cmd"
+call "%clusterpath%\scripts\^!START_CLUSTER.cmd"
 timeout /t 3
 EXIT

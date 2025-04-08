@@ -1,16 +1,34 @@
 @echo off
 chcp 65001>nul
+mode con:cols=70 lines=8
+
 setlocal enabledelayedexpansion
 
-:: Rcon Password for annonce
-set rcon_pass=SUPERRCONPASSWORD
-:: DSiscord webhook for annonce
-set WEBHOOK_URL=https://discord.com/api/webhooks/1222834102860910603/_gC9JZOK9Q2TpGmNBwffffffffffffffffffffffffddddddddddd
+:: ===== FUNCTIONS read config ======================================
+set "config_file=%~dp0demon.cfg"
+goto SKIP_FUNCTIONS
+:read_param
+set "getparam=%~1"
+for /f "delims=" %%a in ('powershell -Command "(Get-Content -Encoding UTF8 '%config_file%' | Where-Object {$_ -match '^\s*%getparam%='}) -replace '.*=', ''"') do (
+    set "%getparam%=%%a"
+)
+exit /b
+:SKIP_FUNCTIONS
+call :read_param WEBHOOK_URL
+call :read_param rcon_host
+call :read_param rcon_pass
+call :read_param MESSAGE1
+call :read_param MESSAGE2
+call :read_param MESSAGE3
+call :read_param rconmessage1
+call :read_param rconmessage2
+call :read_param rconmessage3
+:: ===== FUNCTIONS read config END ======================================
+
 :: TIMERS in minutes for cycles
 set "updater=10"
 set "backaper=30"
-set "offline=2"
-
+set "offline=1"
 
 set steamAppID=1794810
 set clearCache=1
@@ -31,8 +49,6 @@ set updateinprogress="%serverPath%\updateinprogress.dat"
 set latestAvailableUpdate="%dataPath%\latestavailableupdate.txt"
 set latestInstalledUpdate="%dataPath%\latestinstalledupdate.txt"
 
-
-mode con:cols=70 lines=8
 cd "%root%\"
 if not exist "%backupDir%" (mkdir "%backupDir%")
 
@@ -50,6 +66,7 @@ cls
 title %Title%
 color 0A
 :Backup
+title %Title%
 cls
 echo backing up...
 if exist "%pack%\SQL_backup" (rd /s /q "%pack%\SQL_backup")
@@ -69,6 +86,7 @@ netsh advfirewall firewall delete rule name="Block Specific IP"
 goto Delay
 
 :Update
+title %Title%
 color 0E
 echo.
 echo %DATE% %TIME% Checking For Update
@@ -99,7 +117,7 @@ if exist %updateinprogress% (
 	    set "availableVersion=!availableVersion:"=!"
 	    echo !availableVersion!>%latestAvailableUpdate%
 	)
-	if exist %latestInstalledUpdate% (
+	if exist %latestInstalledUpdate%.DISABLED (
 	    for /f "usebackq tokens=*" %%i in (%latestInstalledUpdate%) do (
 	        set installedVersion=%%i
 	    )
@@ -159,6 +177,7 @@ goto Delay
 
 :: LOOP TIMER
 :Delay
+title %Title%
 cls
 color 0A
 echo %DATE% %TIME% Running
@@ -210,6 +229,7 @@ echo Versions
 
 curl -s https://api.steamcmd.net/v1/info/%steamAppID% > %tmp_json%.tmp
 powershell -command "Get-Content -Path '%tmp_json%.tmp' | ConvertFrom-Json | ConvertTo-Json -Depth 100 | Out-File -FilePath '%tmp_json%' -Encoding utf8"
+del %tmp_json%.tmp
 echo.
 set "availableVersion="
 for /f "usebackq tokens=*" %%a in (%tmp_json%) do (
@@ -238,64 +258,69 @@ timeout /t 3
 goto Delay
 
 :Kill
+
 color 0C
 echo ====== Update Available ======
 echo Installed: !installedVersion! - available: !availableVersion!
 echo.
 echo %DATE% %TIME% UPDATE FOUND, PREPARING FOR RESTART!
 timeout /t 60
+:: ANNONCE
 echo Discord annonce 1
-set "MESSAGE=@here\n Обнаружено обновление^!\n Кластер будет перезагружен через 10 минут^!"
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE!\"}" !WEBHOOK_URL!
-set "rconmessage=Рестарт через 10 минут"
-%rconPath%\PyRcon.exe -ip 65.109.113.61 -p 8012 -pass "%rcon_pass%" -c BroadcastNotifySysInfo ^\"!rconmessage!\" 1 0
-%rconPath%\PyRcon.exe -ip 65.109.113.61 -p 8022 -pass "%rcon_pass%" -c BroadcastNotifySysInfo ^\"!rconmessage!\" 1 0
-%rconPath%\PyRcon.exe -ip 65.109.113.61 -p 8032 -pass "%rcon_pass%" -c BroadcastNotifySysInfo ^\"!rconmessage!\" 1 0
+curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE1!\"}" !WEBHOOK_URL!
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
 timeout /t 300
 
 echo Discord annonce 2
-set "MESSAGE= Обнаружено обновление^!\n Кластер будет перезагружен через 5 минут^!"
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE!\"}" !WEBHOOK_URL!
-set "rconmessage=Рестарт через 5 минут"
-%rconPath%\PyRcon.exe -ip 65.109.113.61 -p 8012 -pass "%rcon_pass%" -c BroadcastNotifySysInfo ^\"!rconmessage!\" 1 0
-%rconPath%\PyRcon.exe -ip 65.109.113.61 -p 8022 -pass "%rcon_pass%" -c BroadcastNotifySysInfo ^\"!rconmessage!\" 1 0
-%rconPath%\PyRcon.exe -ip 65.109.113.61 -p 8032 -pass "%rcon_pass%" -c BroadcastNotifySysInfo ^\"!rconmessage!\" 1 0
+curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE2!\"}" !WEBHOOK_URL!
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
 timeout /t 240
 
 echo Discord annonce 3
-set "MESSAGE=@here\n Обнаружено обновление^!\n Кластер будет перезагружен через 1 минуту^!"
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE!\"}" !WEBHOOK_URL!
-set "rconmessage=Рестарт через 1 минуту"
-%rconPath%\PyRcon.exe -ip 65.109.113.61 -p 8012 -pass "%rcon_pass%" -c BroadcastNotifySysInfo ^\"!rconmessage!\" 1 0
-%rconPath%\PyRcon.exe -ip 65.109.113.61 -p 8022 -pass "%rcon_pass%" -c BroadcastNotifySysInfo ^\"!rconmessage!\" 1 0
-%rconPath%\PyRcon.exe -ip 65.109.113.61 -p 8032 -pass "%rcon_pass%" -c BroadcastNotifySysInfo ^\"!rconmessage!\" 1 0
+curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE3!\"}" !WEBHOOK_URL!
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
 timeout /t 60
 
 echo Saving Worlds....
-echo BattleServer
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 7012 -p "%rcon_pass%" SaveWorld
 echo Lobby
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 6003 -p "%rcon_pass%" SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 6003 -p %rcon_pass% SaveWorld
 echo Pub
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 6014 -p "%rcon_pass%" SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 6014 -p %rcon_pass% SaveWorld
 echo Scene 100
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 8012 -p "%rcon_pass%" SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8012 -p %rcon_pass% SaveWorld
 echo Scene 200
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 8022 -p "%rcon_pass%" SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8022 -p %rcon_pass% SaveWorld
 echo Scene 300
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 8032 -p "%rcon_pass%" SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8032 -p %rcon_pass% SaveWorld
+echo Scene 400
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8042 -p %rcon_pass% SaveWorld
 echo Exiting Worlds...
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 7012 -p "%rcon_pass%" ShutdownServer
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 6003 -p "%rcon_pass%" ShutdownServer
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 6014 -p "%rcon_pass%" ShutdownServer
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 8012 -p "%rcon_pass%" ShutdownServer
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 8022 -p "%rcon_pass%" ShutdownServer
-%rconPath%\mcrcon.exe -H 65.109.113.61 -P 8032 -p "%rcon_pass%" ShutdownServer
-TIMEOUT /t 10
-:: second HARD kill if rcon not response
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8012 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8022 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8032 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8042 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 6003 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 6014 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 7012 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 7022 -p %rcon_pass% ShutdownServer
+TIMEOUT /t 20
+:: second way HARD kill if rcon not response
 taskkill /f /im MOEServer.exe
+taskkill /f /im game-opt-sys.exe
+taskkill /f /im game-chat-service.exe
+taskkill /f /im MatrixServerTool.exe
 
-echo Starting Update....This could take a few minutes...
+:START_UPDATE
+echo Starting Update....This could take a long time...
 %steamcmdExec% +force_install_dir %serverPath% +login anonymous +app_update %steamAppID% validate +quit>%latestAppInfo%
 echo !availableVersion!>%latestInstalledUpdate%
 echo Update Done!

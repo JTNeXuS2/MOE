@@ -9,8 +9,8 @@ need open ports UDP+TCP: 3307 for SQL server,6379 for Redis server, servers need
 3. replace all texts via notepad++ in C:\moe_cluster use filters ```*.txt *.json *.bat *.cmd *.conf *.ini```
 
 	replace it (Find -> Replace)  
-	    ```junger.zzux.com``` -> ```your DNSnames```  
-	    ```192.168.0.101``` -> ```your Local ip```  
+	    ```junger.zzux.com``` -> ```your DNSnames or external IP```  
+	    ```192.168.0.101``` -> ```your Local IP```  
 	    ```RCON_PASSWORD``` -> ```your RCON_PASSWORD```  
 	addition: if issues rcon  
 	            0.0.0.0 -> To ExternalIP or Local IP (cant DNSnames)

@@ -10,7 +10,7 @@ replace it (Find -> Replace)
     ```192.168.0.101``` -> ```your Local ip```  
     ```RCON_PASSWORD``` -> ```your RCON_PASSWORD```  
 
-        addition if issues rcon
+addition: if issues rcon  
         0.0.0.0 -> To ExternalIP or Local IP (cant DNSnames)
 4. check the settings in C:\moe_cluster\scripts\demon.cfg
 5. run MatrixServerTool and check the settings

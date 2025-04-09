@@ -18,7 +18,7 @@
 	check the operation of the cluster and servers
 	if everything works fine run "Auto_Update_Backup_Claster.bat" to automatically run the cluster
 	
-dayly restart at 12:00 C:\moe_cluster\scripts\ShedulerRestart.cmd
+dayly restart at 12:00 setup in C:\moe_cluster\scripts\ShedulerRestart.cmd
 
 when adding/removing servers, you will need to add or remove the corresponding block in CMDs(moe_cluster\scripts)
 

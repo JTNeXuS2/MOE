@@ -1,9 +1,9 @@
 
 # Pre-configured BUILD CLASTER
 ## ======= START =======
-1. Unpack in to C:\moe_cluster
-2. To create all the necessary directories, use the script "z start once - mklink- sync dir.cmd"
-3. replace all texts use filters via notepad++ in C:\moe_cluster
+###### 1. Unpack in to C:\moe_cluster
+###### 2. To create all the necessary directories, use the script "z start once - mklink- sync dir.cmd"
+###### 3. replace all texts use filters via notepad++ in C:\moe_cluster
 *.txt *.json *.bat *.cmd *.conf *.ini
 
 replace it (Find -> Replace)

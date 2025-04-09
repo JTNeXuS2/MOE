@@ -1,5 +1,5 @@
 
-Pre-configured
+### Pre-configured
 ======= START =======
 1. Unpack in to C:\moe_cluster
 2. To create all the necessary directories, use the script "z start once - mklink- sync dir.cmd"

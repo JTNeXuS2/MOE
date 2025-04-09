@@ -5,12 +5,12 @@
 2. To create all the necessary directories, use the script "z start once - mklink- sync dir.cmd"
 3. replace all texts via notepad++ in C:\moe_cluster use filters ```*.txt *.json *.bat *.cmd *.conf *.ini```
 
-replace it (Find -> Replace)  
-    ```junger.zzux.com``` -> ```your DNSnames```  
-    ```192.168.0.101``` -> ```your Local ip```  
-    ```RCON_PASSWORD``` -> ```your RCON_PASSWORD```  
-addition: if issues rcon  
-            0.0.0.0 -> To ExternalIP or Local IP (cant DNSnames)
+	replace it (Find -> Replace)  
+	    ```junger.zzux.com``` -> ```your DNSnames```  
+	    ```192.168.0.101``` -> ```your Local ip```  
+	    ```RCON_PASSWORD``` -> ```your RCON_PASSWORD```  
+	addition: if issues rcon  
+	            0.0.0.0 -> To ExternalIP or Local IP (cant DNSnames)
 
 4. check the settings in C:\moe_cluster\scripts\demon.cfg
 5. run MatrixServerTool and check the settings

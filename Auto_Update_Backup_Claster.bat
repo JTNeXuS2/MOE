@@ -23,6 +23,8 @@ call :read_param MESSAGE3
 call :read_param rconmessage1
 call :read_param rconmessage2
 call :read_param rconmessage3
+call :read_param PREFEXDIS
+call :read_param PREFEXRCON
 :: ===== FUNCTIONS read config END ======================================
 
 :: TIMERS in minutes for cycles
@@ -267,27 +269,33 @@ echo %DATE% %TIME% UPDATE FOUND, PREPARING FOR RESTART!
 timeout /t 60
 :: ANNONCE
 echo Discord annonce 1
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE1!\"}" !WEBHOOK_URL!
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
+set "MESSAGE=!MESSAGE1!!PREFEXDIS!"
+set "RCONMSG=!rconmessage1!!PREFEXRCON!"
+if defined webhook_url (curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE!\"}" !WEBHOOK_URL!)
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
 timeout /t 300
 
 echo Discord annonce 2
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE2!\"}" !WEBHOOK_URL!
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
+set "MESSAGE=!MESSAGE2!!PREFEXDIS!"
+set "RCONMSG=!rconmessage2!!PREFEXRCON!"
+if defined webhook_url (curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE!\"}" !WEBHOOK_URL!)
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
 timeout /t 240
 
 echo Discord annonce 3
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE3!\"}" !WEBHOOK_URL!
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
-%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
+set "MESSAGE=!MESSAGE3!!PREFEXDIS!"
+set "RCONMSG=!rconmessage3!!PREFEXRCON!"
+if defined webhook_url (curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE!\"}" !WEBHOOK_URL!)
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
+%rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!RCONMSG!\" 1 0
 timeout /t 60
 
 echo Saving Worlds....

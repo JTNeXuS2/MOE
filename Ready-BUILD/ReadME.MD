@@ -6,8 +6,8 @@
 3. replace all texts use filters via notepad++ in C:\moe_cluster
 *.txt *.json *.bat *.cmd *.conf *.ini
 
-replace it (Find -> Replace)
-	    junger.zzux.com -> your DNSnames\n
+	    replace it (Find -> Replace)
+	    junger.zzux.com -> your DNSnames
 	    192.168.0.101 -> your Local ip
 	    RCON_PASSWORD -> your RCON_PASSWORD
 

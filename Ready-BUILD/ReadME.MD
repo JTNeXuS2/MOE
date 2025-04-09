@@ -27,15 +27,15 @@ when adding/removing servers, you will need to add or remove the corresponding b
 don't forget to change the database access via C:\moe_cluster\mysql\HeidiSQL (SQL Server need started C:\moe_cluster\mysql\!Start.cmd)
 to connect to the database with ROOTaccess use ip "127.0.0.1" port "3307" user "SuperAdmin" pass "Legend!@#mko"
 
-additional sql scripts
+#### additional sql scripts
 
-	create a database
+##### create a database
 		-- Don't touch this
 		CREATE DATABASE moe_pub;
 		CREATE DATABASE moe_role;
 		CREATE DATABASE moe_opt;
 
-	assign give access rights to user moe_cluster with pass DB_PASSWORD from any hosts
+##### assign give access rights to user moe_cluster with pass DB_PASSWORD from any hosts
 		-- CHANGE THE DB_PASSWORD
 		CREATE USER 'moe_cluster'@'_%' IDENTIFIED BY 'DB_PASSWORD';
 		GRANT ALL PRIVILEGES ON moe_opt.* TO 'moe_cluster'@'_%';

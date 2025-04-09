@@ -7,9 +7,9 @@
 
 replace it (Find -> Replace)
 
-	    ```junger.zzux.com``` -> ```your DNSnames```
-	    ```192.168.0.101``` -> ```your Local ip```
-	    ```RCON_PASSWORD``` -> ```your RCON_PASSWORD```
+```junger.zzux.com``` -> ```your DNSnames```
+```192.168.0.101``` -> ```your Local ip```
+```RCON_PASSWORD``` -> ```your RCON_PASSWORD```
 
 		addition if issues rcon
 		0.0.0.0 -> To ExternalIP or Local IP (cant DNSnames)

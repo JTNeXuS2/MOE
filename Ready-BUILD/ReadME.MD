@@ -1,6 +1,6 @@
 
-## Pre-configured BUILD CLASTER
-### ======= START =======
+# Pre-configured BUILD CLASTER
+## ======= START =======
 1. Unpack in to C:\moe_cluster
 2. To create all the necessary directories, use the script "z start once - mklink- sync dir.cmd"
 3. replace all texts use filters via notepad++ in C:\moe_cluster
@@ -23,7 +23,7 @@ dayly restart at 12:00 C:\moe_cluster\scripts\ShedulerRestart.cmd
 
 when adding/removing servers, you will need to add or remove the corresponding block in CMDs(moe_cluster\scripts)
 
-### ======= Additional INFOs =======
+## ======= Additional INFOs =======
 don't forget to change the database access via C:\moe_cluster\mysql\HeidiSQL (SQL Server need started C:\moe_cluster\mysql\!Start.cmd)
 to connect to the database with ROOTaccess use ip "127.0.0.1" port "3307" user "SuperAdmin" pass "Legend!@#mko"
 

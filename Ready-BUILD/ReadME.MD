@@ -11,7 +11,7 @@ replace it (Find -> Replace)
     ```RCON_PASSWORD``` -> ```your RCON_PASSWORD```  
 
 addition: if issues rcon  
-        0.0.0.0 -> To ExternalIP or Local IP (cant DNSnames)
+            0.0.0.0 -> To ExternalIP or Local IP (cant DNSnames)
 4. check the settings in C:\moe_cluster\scripts\demon.cfg
 5. run MatrixServerTool and check the settings
 6. run "!START-minimal_TEST_CLUSTER.cmd" for start core and one server or "!START_CLUSTER.cmd" for full start claster

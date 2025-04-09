@@ -4,9 +4,9 @@
 1. Unpack in to C:\moe_cluster
 2. To create all the necessary directories, use the script "z start once - mklink- sync dir.cmd"
 3. replace all texts use filters via notepad++ in C:\moe_cluster
-*.txt *.json *.bat *.cmd *.conf *.ini
+	    *.txt *.json *.bat *.cmd *.conf *.ini
 
-	    replace it (Find -> Replace)
+replace it (Find -> Replace)
 	    junger.zzux.com -> your DNSnames
 	    192.168.0.101 -> your Local ip
 	    RCON_PASSWORD -> your RCON_PASSWORD

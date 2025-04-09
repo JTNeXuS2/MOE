@@ -43,11 +43,11 @@ to connect to the database with ROOTaccess use ip "127.0.0.1" port "3307" user "
 	GRANT ALL PRIVILEGES ON moe_opt.* TO 'moe_cluster'@'_%';
 	GRANT ALL PRIVILEGES ON moe_role.* TO 'moe_cluster'@'_%';
 	ALL PRIVILEGES ON moe_pub.* TO 'moe_cluster'@'_%';
-
-
-
-
-
+  
+  
+  
+  
+  
 #### find me on discord [![Discord](https://discordapp.com/api/guilds/626106205122592769/widget.png?style=shield)](https://discord.gg/qYmBmDR)
 #### Donate for me
 #### [yoomoney](https://yoomoney.ru/to/4100116619431314)

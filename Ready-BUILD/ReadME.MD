@@ -7,7 +7,7 @@
 *.txt *.json *.bat *.cmd *.conf *.ini
 
 replace it (Find -> Replace)
-	    junger.zzux.com -> your DNSnames
+	    junger.zzux.com -> your DNSnames\n
 	    192.168.0.101 -> your Local ip
 	    RCON_PASSWORD -> your RCON_PASSWORD
 

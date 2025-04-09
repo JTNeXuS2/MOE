@@ -30,14 +30,14 @@ to connect to the database with ROOTaccess use ip "127.0.0.1" port "3307" user "
 additional sql scripts
 
 create a database
-		-- Don't touch this
-		CREATE DATABASE moe_pub;
-		CREATE DATABASE moe_role;
-		CREATE DATABASE moe_opt;
+	-- Don't touch this
+	CREATE DATABASE moe_pub;
+	CREATE DATABASE moe_role;
+	CREATE DATABASE moe_opt;
 
 assign give access rights to user moe_cluster with pass DB_PASSWORD from any hosts
-		-- CHANGE THE DB_PASSWORD
-		CREATE USER 'moe_cluster'@'_%' IDENTIFIED BY 'DB_PASSWORD';
-		GRANT ALL PRIVILEGES ON moe_opt.* TO 'moe_cluster'@'_%';
-		GRANT ALL PRIVILEGES ON moe_role.* TO 'moe_cluster'@'_%';
-		GRANT ALL PRIVILEGES ON moe_pub.* TO 'moe_cluster'@'_%';
+	-- CHANGE THE DB_PASSWORD
+	CREATE USER 'moe_cluster'@'_%' IDENTIFIED BY 'DB_PASSWORD';
+	GRANT ALL PRIVILEGES ON moe_opt.* TO 'moe_cluster'@'_%';
+	GRANT ALL PRIVILEGES ON moe_role.* TO 'moe_cluster'@'_%';
+	ALL PRIVILEGES ON moe_pub.* TO 'moe_cluster'@'_%';

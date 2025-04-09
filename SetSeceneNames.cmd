@@ -27,7 +27,7 @@ call :read_param rcon_pass
 echo Lobby
 set port=6003
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %pass% "SetServerMultiplier ?SessionName=[Illidan] My Test Cluster"
-%mcrcon_dir%\PyRcon.exe -ip %rcon_host% -p %port% -pass %rcon_pass% -c "SetServerMultiplier ?Description=[RU/EU]Mirnaya Pycb [PvEvP/BG/GvG/Kits/Shop/x2-x3]ALL MAPS Мирная русь		StartKits,All Maps, Discord:discord.gg/qYmBmDR, Shop:pycbmythofempires.survivalshop.org"
+%mcrcon_dir%\PyRcon.exe -ip %rcon_host% -p %port% -pass %rcon_pass% -c "SetServerMultiplier ?Description=Discord:discord.gg/qYmBmDR"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?XCJinPaiMemberCountLimit=1.0"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?bOpenSeasonActivity=true"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetXianChengBattleParam 7 17 4320 1440 14 300"
@@ -35,13 +35,13 @@ set port=6003
 
 echo Pub
 set port=6014
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName={RU/EU}Mirnaya Pycb BG 24/7 [PvEvP/GvG/Kits/Shop]"
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName=[Illidan] My Test Cluster"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?Description="
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?bOpenSeasonActivity=true"
 
 echo Scenes
 set port=8012
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName=[RU/EU]Mirnaya Pycb [PvE]S100"
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName=[Illidan] My Test Cluster S100"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?Description="
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?bOpenSeasonActivity=true"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetXianChengBattleParam 7 17 4320 1440 7 300"
@@ -49,7 +49,7 @@ set port=8012
 :: %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SaveGameIntervalMinute=9"
 
 set port=8022
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName=[RU/EU]Mirnaya Pycb [PvE]S200"
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName=[Illidan] My Test Cluster S200"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?Description="
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?bOpenSeasonActivity=true"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetXianChengBattleParam 7 17 4320 1440 7 300"
@@ -57,7 +57,7 @@ set port=8022
 :: %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SaveGameIntervalMinute=8"
 
 set port=8032
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName=[RU/EU]Mirnaya Pycb[PVE]S300"
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName=[Illidan] My Test Cluster S300"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?Description="
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?bOpenSeasonActivity=true"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetXianChengBattleParam 7 18 4320 1440 7 300"
@@ -65,7 +65,7 @@ set port=8032
 :: %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SaveGameIntervalMinute=7"
 
 set port=8042
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName=WargmClaim3697 [RU/EU]Mirnaya Pycb [PVP]S400"
+%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?SessionName=[Illidan] My Test Cluster S400"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?Description="
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetServerMultiplier ?bOpenSeasonActivity=true"
 %mcrcon_dir%\mcrcon.exe -H %rcon_host% -P %port% -p %rcon_pass% "SetXianChengBattleParam 7 16 4320 1440 7 300"

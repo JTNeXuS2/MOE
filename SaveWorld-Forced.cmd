@@ -2,7 +2,7 @@
 chcp 65001>nul
 cd %~dp0
 setlocal enabledelayedexpansion
-title "MOE SaveWorld
+title "MOE Tool
 
 set "clusterpath=C:\moe_cluster"
 set "mcrcon_dir=%clusterpath%\rcon"

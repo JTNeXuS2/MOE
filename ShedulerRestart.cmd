@@ -34,6 +34,8 @@ call :read_param MESSAGE3
 call :read_param rconmessage1
 call :read_param rconmessage2
 call :read_param rconmessage3
+call :read_param PREFEXDIS
+call :read_param PREFEXRCON
 :: ===== FUNCTIONS read config END ======================================
 
 set "clusterpath=C:\moe_cluster"
@@ -42,7 +44,7 @@ set "ConfigFile=%clusterpath%\MatrixServerTool\ServerParamConfig_All.ini"
 
 :: ANNONCE
 echo Discord annonce 1
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE1!\"}" !WEBHOOK_URL!
+if defined webhook_url (curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE1!\"}" !WEBHOOK_URL!)
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage1!\" 1 0
@@ -50,7 +52,7 @@ curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE1!\"
 timeout /t 300
 
 echo Discord annonce 2
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE2!\"}" !WEBHOOK_URL!
+if defined webhook_url (curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE2!\"}" !WEBHOOK_URL!)
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage2!\" 1 0
@@ -58,7 +60,7 @@ curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE2!\"
 timeout /t 240
 
 echo Discord annonce 3
-curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE3!\"}" !WEBHOOK_URL!
+if defined webhook_url (curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!MESSAGE3!\"}" !WEBHOOK_URL!)
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8012 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8022 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8032 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0

@@ -20,8 +20,9 @@ need open ports UDP+TCP: 3307 for SQL server,6379 for Redis server, servers need
 5. run MatrixServerTool and check the settings
 6. run "!START-minimal_TEST_CLUSTER.cmd" for start core and one server or "!START_CLUSTER.cmd" for full start claster
 	check the operation of the cluster and servers ![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_4.png)
-	if everything works fine run "Auto_Update_Backup_Claster.bat" to automatically run the cluster servsers ![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_5.png)
-	![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_6.png)
+	if everything works fine run "Auto_Update_Backup_Claster.bat" to automatically run the cluster servsers
+	![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_5.png)  
+	![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_6.png)  
 dayly restart at 12:00 setup in C:\moe_cluster\scripts\ShedulerRestart.cmd
 
 when adding/removing servers, you will need to add or remove the corresponding block in CMDs(moe_cluster\scripts)

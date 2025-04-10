@@ -26,7 +26,7 @@ need open ports UDP+TCP: 3307 for SQL server,6379 for Redis server, servers need
 dayly restart at 12:00 setup in C:\moe_cluster\scripts\ShedulerRestart.cmd
 
 when adding/removing servers, you will need to add or remove the corresponding block in CMDs(moe_cluster\scripts)
-
+![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_7.png)  
 ## ======= Additional INFOs =======
 don't forget to change the database access via C:\moe_cluster\mysql\HeidiSQL (SQL Server need started C:\moe_cluster\mysql\!Start.cmd)
 to connect to the database with ROOTaccess use ip "127.0.0.1" port "3307" user "SuperAdmin" pass "Legend!@#mko"

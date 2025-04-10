@@ -29,9 +29,9 @@ when adding/removing servers, you will need to add or remove the corresponding b
 ![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_7.png)  
 ## ======= Additional INFOs =======
 don't forget to change the database access via C:\moe_cluster\mysql\HeidiSQL (SQL Server need started C:\moe_cluster\mysql\!Start.cmd)
-![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_8.png)  
+![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_8a.png)  
 to connect to the database with ROOTaccess use ip "127.0.0.1" port "3307" user "SuperAdmin" pass "Legend!@#mko"
-
+	just specify from which addresses what rights can be obtained or delete unnecessary ones, don't worry, you can always restore the database from a backup
 #### additional sql scripts
 
 ##### create a database

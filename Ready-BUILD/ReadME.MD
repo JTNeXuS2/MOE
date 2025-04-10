@@ -3,7 +3,7 @@
    Download  
 [pixeldrain](https://pixeldrain.com/u/XMVnrDvw) | [StaticMirror](https://junger.zzux.com/webhook/MOE_DLC/moe_cluster-ready.zip)
 ## ======= START =======
-need open ports UDP+TCP: 3307 for SQL server,6379 for Redis server, servers need range 6000-8999
+need open ports UDP+TCP: 3307 for SQL server,6379 for Redis server, servers need range 6000-8999 (The exact ports can be found in the matrix tool)
 
 1. Unpack in to C:\moe_cluster
 2. To create all the necessary directories, use the script "z start once - mklink- sync dir.cmd" ![Screen](https://junger.zzux.com/webhook/MOE_DLC/Screenshot_1.png)  

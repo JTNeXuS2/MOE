@@ -5,8 +5,8 @@
 need open ports UDP+TCP: 3307 for SQL server,6379 for Redis server, servers need range 6000-8999
 
 1. Unpack in to C:\moe_cluster
-2. To create all the necessary directories, use the script "z start once - mklink- sync dir.cmd"
-2a. Download SteamCMD and server files start "z manual Update-Download-Validate.cmd"
+2. To create all the necessary directories, use the script "z start once - mklink- sync dir.cmd"  
+    2a. Download SteamCMD and server files start "z manual Update-Download-Validate.cmd"
 3. replace all texts via notepad++ in C:\moe_cluster use filters ```*.txt *.json *.bat *.cmd *.conf *.ini```
 
 	replace it (Find -> Replace)  

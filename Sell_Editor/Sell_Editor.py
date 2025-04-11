@@ -114,8 +114,20 @@ class SQLInsertEditor:
         self.updated_sql_output = scrolledtext.ScrolledText(self.left_frame, height=10)
         self.updated_sql_output.pack(fill='both', expand=True)
 
-        self.write_to_db_button = tk.Button(self.left_frame, text="Write To DB", command=self.generate_sql_and_write_to_db)
-        self.write_to_db_button.pack(fill='x', expand=True)
+
+        # update/insert_write_frame
+        self.updinsrt_write_frame = tk.Frame(self.left_frame)
+        self.updinsrt_write_frame.pack(fill='x', expand=True)
+
+        self.write_to_db_button = tk.Button(self.updinsrt_write_frame, text="Insert Write to DB", command=self.generate_sql_and_write_to_db)
+        self.write_to_db_button.pack(side='left', fill='x', padx=(5, 0), expand=True)
+
+        self.update_to_db_button = tk.Button(self.updinsrt_write_frame, text="Update Write in DB", command=self.generate_sql_and_update_to_db)
+        self.update_to_db_button.pack(side='left', fill='x', padx=(5, 0), expand=True)
+
+        self.delete_to_db_button = tk.Button(self.updinsrt_write_frame, text="Delete Write in DB by ID", command=self.delete_from_db)
+        self.delete_to_db_button.pack(side='left', fill='x', padx=(5, 0), expand=True)
+
 
         # Блок для отображения файлов .sql в правой части окна
         self.file_list_frame = tk.Frame(root)
@@ -168,13 +180,105 @@ class SQLInsertEditor:
             self.write_to_db()
         else:
             messagebox.showinfo("Info", "No data to write to the table. Input SQL is clear!")
-			
+
+    def generate_sql_and_update_to_db(self):
+        global ready
+        if ready:
+            if self.genwrite:
+                self.generate_sql()
+            self.update_to_db()
+        else:
+            messagebox.showinfo("Info", "No data to update in the table. Input SQL is clear!")
+
     def toggle_lockid(self):
         self.lockid = self.lockid_var.get()
     def toggle_autoparse(self):
         self.autoparse = self.autoparse_var.get()
     def toggle_genwrite(self):
         self.genwrite = self.genwrite_var.get()
+
+    def convert_insert_to_update(self, insert_sql):
+        if not insert_sql.startswith("INSERT INTO"):
+            raise ValueError("Provided SQL is not an INSERT statement.")
+        table_name = re.search(r'INSERT INTO `(\w+)`', insert_sql).group(1)
+        values_match = re.search(r'VALUES \((.*)\);', insert_sql, re.DOTALL)
+        if not values_match:
+            raise ValueError("No VALUES found in the INSERT statement.")
+        values = values_match.group(1).strip()
+        values_list = []
+        inside_quotes = False
+        current_value = ''
+        for char in values:
+            if char == "'" and (len(current_value) == 0 or current_value[-1] != '\\'):
+                inside_quotes = not inside_quotes
+            if char == ',' and not inside_quotes:
+                values_list.append(current_value.strip())
+                current_value = ''
+            else:
+                current_value += char
+        if current_value:
+            values_list.append(current_value.strip())
+        id_value = values_list[-4]
+        columns_match = re.search(r'\((.*?)\)', insert_sql.split("VALUES")[0], re.DOTALL)
+        if not columns_match:
+            raise ValueError("No columns found in the INSERT statement.")
+        columns = [column.strip().strip('`') for column in columns_match.group(1).split(',')]
+        set_clause = ", ".join([f"`{column}` = {value}" for column, value in zip(columns, values_list)])
+        update_sql = f"UPDATE `{table_name}` SET {set_clause} WHERE `id` = {id_value};"
+        return update_sql, id_value
+
+    def delete_from_db(self):
+        sql = self.updated_sql_output.get("1.0", tk.END).strip()
+        update_sql, id_value = self.convert_insert_to_update(sql)
+        delete_sql = f"DELETE FROM `sell_goods` WHERE `id` = {id_value};"
+
+        try:
+            connection = mysql.connector.connect(host=host, port=port, user=user, password=password, database=database)
+            cursor = connection.cursor()
+            cursor.execute(delete_sql)
+            connection.commit()
+
+            # Получаем количество затронутых строк
+            affected_rows = cursor.rowcount
+
+            if affected_rows > 0:
+                print("Success: Row deleted from Database.")
+                messagebox.showinfo("Success", f"Row with ID {id_value} has been successfully deleted from the database.")
+            else:
+                print("No rows deleted. ID may not exist.")
+                messagebox.showwarning("Warning", f"No row found with ID {id_value}.")
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            messagebox.showerror("Error", f"An error occurred: {err}")
+        finally:
+            cursor.close()
+            connection.close()
+
+    def update_to_db(self):
+        sql = self.updated_sql_output.get("1.0", tk.END).strip()  # Получаем текст из поля
+        update_sql, id_value = self.convert_insert_to_update(sql)
+        try:
+            connection = mysql.connector.connect(host=host, port=port, user=user, password=password, database=database)
+            cursor = connection.cursor()
+            cursor.execute(update_sql)
+            connection.commit()
+            affected_rows = cursor.rowcount
+            print("Success Write data to Database Sell_goods.")
+            if affected_rows:
+                messagebox.showinfo("Success", "Successfully update data in the database.")
+            else:
+                messagebox.showwarning("Error", f"Nothing changed in Row ID {id_value}")
+        except mysql.connector.Error as err:
+            if err.errno == 1062:
+                error_message = f"Error: Change ID, must be unique. just add 10000.\n{err}"
+            else:
+                error_message = f"Error: {err}"
+            print(f"Error: {err}")
+            messagebox.showerror("Error", error_message)
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
 
     def write_to_db(self):
         sql = self.updated_sql_output.get("1.0", tk.END).strip()  # Получаем текст из поля
@@ -191,7 +295,7 @@ class SQLInsertEditor:
             else:
                 error_message = f"Error: {err}"
             print(f"Error: {err}")
-            messagebox.showerror("Ошибка", error_message)
+            messagebox.showerror("Error", error_message)
         finally:
             if connection.is_connected():
                 cursor.close()

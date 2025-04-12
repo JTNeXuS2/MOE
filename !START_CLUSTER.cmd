@@ -38,8 +38,8 @@ for /f "delims=" %%a in ('powershell -Command "(Get-Content -Encoding UTF8 '%con
     set "%getparam%=%%a"
 )
 exit /b
-:ANNONCE
-:: ANNONCE function
+:annonce
+:: annonce function
 if defined webhook_url (
 	set "dis_msg=%STARTMESSAGE%**%serverid%**"
 	curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"!dis_msg!\"}" %WEBHOOK_URL%
@@ -98,7 +98,7 @@ if not "%processpid%"=="" (
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
 	::cd "%clusterpath%\scripts\Status" && start "%WindowTitle%" "MOE.ServerStatus.exe"
-	cd "%clusterpath%\scripts\Status" && start "%WindowTitle%" "^!Start.cmd"
+	cd "%clusterpath%\scripts\Status" && if exist "^!Start.cmd" start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 1
 )
 :::LogParser
@@ -108,7 +108,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-	cd "%clusterpath%\scripts\Logon" && start "%WindowTitle%" "^!Start.cmd"
+	cd "%clusterpath%\scripts\Logon" && if exist "^!Start.cmd" start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 1
 )
 
@@ -119,7 +119,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-	cd "%clusterpath%\scripts\ToolKits" && start "%WindowTitle%" "^!Start.cmd"
+	cd "%clusterpath%\scripts\ToolKits" && if exist "^!Start.cmd" start "%WindowTitle%" "^!Start.cmd"
 	timeout /t 1
 )
 ::: END PERIPHERAL SERVERS
@@ -143,7 +143,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-call :ANNONCE
+call :annonce
 start /LOW /affinity 0x0000000000FC0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam! -EnableParallelTickFunction -DisablePhysXSimulation -corelimit=6
 set "setup=1"
 timeout /t 10 >nul
@@ -165,7 +165,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-call :ANNONCE
+call :annonce
 start /LOW /affinity 0x0000000000FC0000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
 timeout /t 5 >nul
@@ -193,7 +193,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-call :ANNONCE
+call :annonce
 start /affinity 0x00000000000001F0 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
 timeout /t 3
@@ -215,7 +215,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-call :ANNONCE
+call :annonce
 start /affinity 0x0000000000001F80 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
 timeout /t 3
@@ -237,7 +237,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
         set "runparam=!runparam!!line!"
     )
 )
-call :ANNONCE
+call :annonce
 start /affinity 0x000000000003F000 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam! -corelimit=6
 set "setup=1"
 timeout /t 3
@@ -261,7 +261,7 @@ for /f "usebackq skip=1 delims=" %%a in ("%readbatch%") do (
     )
 )
 :: 0x000000000003F000
-call :ANNONCE
+call :annonce
 start /affinity 0x000000000000FC00 "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" !runparam!
 set "setup=1"
 timeout /t 3
@@ -296,7 +296,7 @@ if not "%processpid%"=="" (
         set "runparam=!runparam!!line!"
     )
 )
-call :ANNONCE
+call :annonce
 start "MOEServer.exe - %readbatch%" "..\WindowsPrivateServer\MOE\Binaries\Win64\MOEServer.exe" Battlefield_Main_New -game -server -CheatActivityMap=!battlemap! !runparam!
 set "setup=1"
 timeout /t 5
@@ -311,7 +311,7 @@ if not "%processpid%"=="" (
     echo Found %WindowTitle% PID: %processpid%
 ) else (
     echo Process %WindowTitle% not found && echo Started %WindowTitle%
-	call :ANNONCE
+	call :annonce
     call "StartBattleServer_%serverid%.bat"
     set "setup=1"
     timeout /t 5

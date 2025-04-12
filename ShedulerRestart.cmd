@@ -38,9 +38,9 @@ call :read_param PREFEXDIS
 call :read_param PREFEXRCON
 :: ===== FUNCTIONS read config END ======================================
 
-set "clusterpath=C:\moe_cluster"
-set "mcrcon_dir=%clusterpath%\rcon"
-set "ConfigFile=%clusterpath%\MatrixServerTool\ServerParamConfig_All.ini"
+set "root=C:\moe_cluster"
+set "rconPath=%root%\rcon"
+set "ConfigFile=%root%\MatrixServerTool\ServerParamConfig_All.ini"
 
 :: ANNONCE
 echo Discord annonce 1
@@ -67,30 +67,30 @@ if defined webhook_url (curl -H "Content-Type: application/json" -X POST -d "{\"
 %rconPath%\PyRcon.exe -ip %rcon_host% -p 8042 -pass %rcon_pass% -c BroadcastNotifySysInfo ^\"!rconmessage3!\" 1 0
 
 echo Saving Worlds....
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8012 -p %rcon_pass% SaveWorld
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8022 -p %rcon_pass% SaveWorld
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8032 -p %rcon_pass% SaveWorld
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8042 -p %rcon_pass% SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8012 -p %rcon_pass% SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8022 -p %rcon_pass% SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8032 -p %rcon_pass% SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8042 -p %rcon_pass% SaveWorld
 
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 6003 -p %rcon_pass% SaveWorld
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 6014 -p %rcon_pass% SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 6003 -p %rcon_pass% SaveWorld
+%rconPath%\mcrcon.exe -H %rcon_host% -P 6014 -p %rcon_pass% SaveWorld
 timeout /t 60
 
 echo Exiting Worlds...
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8012 -p %rcon_pass% ShutdownServer
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8022 -p %rcon_pass% ShutdownServer
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8032 -p %rcon_pass% ShutdownServer
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 8042 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8012 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8022 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8032 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 8042 -p %rcon_pass% ShutdownServer
 
 goto SKIP_LOBBY
 echo Stop Lobby and Pub
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 6003 -p %rcon_pass% ShutdownServer
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 6014 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 6003 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 6014 -p %rcon_pass% ShutdownServer
 :SKIP_LOBBY
 
 echo Stop BG
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 7012 -p %rcon_pass% ShutdownServer
-%mcrcon_dir%\mcrcon.exe -H %rcon_host% -P 7022 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 7012 -p %rcon_pass% ShutdownServer
+%rconPath%\mcrcon.exe -H %rcon_host% -P 7022 -p %rcon_pass% ShutdownServer
 TIMEOUT /t 20
 
 :Secondkill
@@ -109,6 +109,6 @@ for /f "tokens=1 delims==" %%i in (%ConfigFile%) do (
 
 :Next
 echo Start Claster
-call "%clusterpath%\scripts\^!START_CLUSTER.cmd"
+call "%root%\scripts\^!START_CLUSTER.cmd"
 timeout /t 3
 EXIT
